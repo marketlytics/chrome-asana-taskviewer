@@ -1,0 +1,37 @@
+{
+  	"name": "TestApp",
+  	"description": "This is a test app",
+  	"version": "1",
+  	"manifest_version": 2,
+  	"default_locale": "en",
+  	"permissions": [
+  		"app.window",
+  		"desktopCapture",
+  		"notifications",
+  		"storage",
+  		"<all_urls>",
+      "alwaysOnTopWindows",
+      "unlimitedStorage"
+  	],
+    "commands": {
+      "toggle_window": {
+        "suggested_key": {
+          "default": "Ctrl+Shift+5"
+        },
+        "description": "Hide / shows the window",
+        "global": true
+      }
+    },
+  	"icons": {
+  		"16": "images/icon-16.png",
+  		"128": "images/icon-128.png"
+  	},
+  	"app": {
+  		"background": {
+  			"scripts": [
+  				"scripts/main.js",
+  				"scripts/chromereload.js"
+  			]
+  		}
+  	}
+  }

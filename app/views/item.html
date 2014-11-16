@@ -1,0 +1,22 @@
+<div class="checkbox">
+<input type="checkbox" name="task" value="{{item.id}}" ng-checked="item.completed" />&nbsp;
+<span class="task-text">{{item.name}}&nbsp;</span>
+<small ng-show="item.due_on">{{item.due_on | date:'dd MMM'}}</small>
+<a href="#" ng-click="toggle()" class="pull-right"><i class="glyphicon" ng-class="{ 'glyphicon-chevron-right': !showDetails, 'glyphicon-chevron-down': showDetails}"></i></a>
+</div>
+<div class="details" ng-show="showDetails">
+	<p class="lead" ng-show="item.notes !== ''">{{item.notes}}</p>
+	<ul class="stories">
+		<li ng-repeat="story in item.stories">
+			{{story.created_by.name}} {{story.text}} <small>{{ story.created_at | date:'dd MMM'}}</small>
+		</li>
+	</ul>
+
+	<div class="input-group">
+		<input type="text" class="form-control comment" placeholder="Write a comment..." />
+	  	<div class="input-group-btn">
+	    <button class="btn btn-sm btn-info"><i class="glyphicon glyphicon-send"></i></button>
+	 </div>
+	</div>
+	
+</div>

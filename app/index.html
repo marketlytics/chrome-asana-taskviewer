@@ -1,0 +1,134 @@
+<!doctype html>
+<html ng-app="chromeTest" ng-csp="">
+    <head>
+        <meta charset="utf-8">
+        <title>test</title>
+
+        <!-- build:css styles/vendor.css -->
+        <!-- bower:css -->
+        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="bower_components/angular/angular-csp.css">
+        <!-- endbower -->
+        <!-- endbuild -->
+
+        <!-- build:css styles/main.css -->
+        <link rel="stylesheet" href="styles/bootstrap-paper-theme.min.css">
+        <link rel="stylesheet" href="styles/main.css">
+        <!-- endbuild -->
+    </head>
+    <body ng-controller="TestController">
+        <div class="container minimal" ng-show="minimal">
+            <div class="checkbox pull-left">
+                <input type="checkbox" name="" value="" >
+            </div>
+            <div class="minimal-text pull-left">
+                The text task will come here....
+            </div>
+            <div class="btn-group-vertical pull-right" role="group">
+                <button class="btn btn-sm"><i class="glyphicon glyphicon-refresh"></i></button>
+                <button class="btn btn-sm" ng-click="toggleMinimal()"><i class="glyphicon glyphicon-resize-full"></i></button>
+            </div>
+            <div class="btn-group-vertical pull-right" role="group">
+                <button class="btn btn-sm"><i class="glyphicon glyphicon-arrow-up"></i></button>
+                <button class="btn btn-sm"><i class="glyphicon glyphicon-arrow-down"></i></button>
+            </div>
+        </div>
+        <div class="container" ng-show="!minimal">
+            <div role="tabpanel">
+
+              <!-- Nav tabs -->
+              <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#tasks-tab" aria-controls="tasks-tab" role="tab" data-toggle="tab">Tasks</a></li>
+                <li role="presentation"><a href="#settings-tab" aria-controls="settings-tab" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-cog"></i></a></li>
+                <li role="presentation"><a href="#add-tab" aria-controls="add-tab" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-plus"></i></a></li>
+                <li role="presentation"><a href="#"><i class="glyphicon glyphicon-refresh"></i></a></li>
+                <li role="presentation"><a id="move-tab" href="#"><i class="glyphicon glyphicon-move"></i></a></li>
+                <li role="presentation"><a href="#" ng-click="toggleMinimal()"><i class="glyphicon glyphicon-resize-small"></i></a></li>
+              </ul>
+
+              <!-- Tab panes -->
+              <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="tasks-tab">
+                    <ul id="tasks">
+                        <li ng-repeat="item in tasks" id="item{{item.id}}">
+                            <div data-item="item"></div>
+                        </li>
+                    </ul>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="settings-tab">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Select Workspace:</label>
+                            <select id="workspace" class="form-control">
+                                <option ng-repeat="workspace in workspaces">{{workspace.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Select Project:</label>
+                            <select id="workspace" class="form-control">
+                                <option ng-repeat="project in projects">{{project.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>View:</label>
+                            <select id="filter-completed-tasks" class="form-control">
+                                <option>All Completed and Incomplete Tasks</option>
+                                <option>Tasks to do </option>
+                                <option>Completed Tasks</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Filter Assigned:</label>
+                            <select id="filter-assigned-tasks" class="form-control">
+                                <option>No filter</option>
+                                <option>Me</option>
+                                <option>Team Person 1</option>
+                                <option>Team Person 2</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>API Key:</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control comment" placeholder="Please enter your API key" value="{{apiKey}}" />
+                                <div class="input-group-btn">
+                                    <button class="btn btn-sm btn-info"><i class="glyphicon glyphicon-save"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div role="tabpanel" class="tab-pane" id="add-tab">
+                    <h4>Add a new Task</h4>
+                </div>
+            </div>
+            <div class="footer">2014 <a href="http://marketlytics.com" target="_blank">@marketlytics</a> - use cmd + shift + 5 to hide / unhide this window.</div>
+        </div>
+        <!-- build:js scripts/vendor.js -->
+        <!-- bower:js -->
+        <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+        <script type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="bower_components/lodash/dist/lodash.min.js"></script>
+        <script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
+        <script type="text/javascript" src="bower_components/angular-route/angular-route.min.js"></script>
+        <script type="text/javascript" src="bower_components/restangular/dist/restangular.min.js"></script>
+        <!-- endbower -->
+        <!-- endbuild -->
+
+        <!-- build:js scripts/index.js -->
+        <script src="scripts/launch.js"></script>
+        <script src="scripts/index.js"></script>
+        <!-- endbuild -->
+    </body>
+</html>

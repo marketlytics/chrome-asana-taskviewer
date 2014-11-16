@@ -1,0 +1,141 @@
+html,body {
+	overflow: auto;
+	-webkit-app-region: no-drag;
+}
+
+ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.footer {
+	position: fixed;
+	bottom: 0;
+	font-size: 11px;
+	background: #fff;
+	opacity: 0.8;
+	width: 100%;
+	padding: 5px 0;
+	white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+#move-tab {
+	cursor: move;
+	-webkit-app-region: drag;
+}
+
+.nav-tabs {
+	border-bottom: 1px solid #ddd;
+}
+
+.tab-content {
+	padding-top: 20px;
+}
+
+#tasks {
+	padding-bottom: 40px;
+}
+
+#tasks > li {
+	padding: 8px 0;
+	border-bottom: 1px solid #EEE;
+}
+
+.task-text {
+	width: 76%;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.checkbox {
+	margin: 0;
+}
+
+input[type="text"].form-control {
+	font-size: 13px;
+	margin-top: 15px;
+	border: 1px solid #DDD;
+	padding: 5px;
+	-webkit-border-radius: 3px;
+}
+
+.input-group-btn {
+	padding-top: 13px;
+}
+
+button.btn {
+	padding: 8px 11px;
+	text-transform: none;
+	background: #1f8dd6;
+}
+
+
+.checkbox input[type="checkbox"] {
+	position: relative;
+	margin: 0;
+}
+
+label {
+	font-weight: normal;
+}
+
+small {
+	color: #AAA;
+	font-size: 70%;
+}
+
+#settings-tab label {
+	margin-bottom: -10px;
+	margin-top: 5px;
+	display: block;
+}
+
+.details {
+	padding: 10px 5px;
+}
+.stories {
+	color: rgb(10,110,189);
+	font-size: 11px;
+}
+
+.stories li {
+	white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.stories small {
+	color: #AAA;
+}
+
+
+.container.minimal {
+	padding-right: 0;
+}
+
+.minimal button {
+	color: #fff;
+	-webkit-border-radius: 0 !important; 
+	-webkit-box-shadow: none !important;
+}
+
+.minimal-text {
+	margin-left: 10px;
+	padding-top: 18px;
+	font-size: 15px;
+}
+
+.minimal .checkbox {
+	margin-top: 20px;
+}
+
+
+
+
+
