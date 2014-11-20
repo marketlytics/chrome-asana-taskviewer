@@ -13,98 +13,220 @@ directive('item', function() {
       	controller: 'ItemController'
 	};
 }).
-controller('ItemController', ['$scope', function($scope) {
+controller('ItemController', ['$scope', 'AsanaService', function($scope, AsanaService) {
 	$scope.showDetails = false;
-	$scope.toggle = function() {
+	$scope.toggle = function(taskId) {
+		console.log('fetching', taskId);
+		AsanaService.fetchTaskDetails(taskId);
 		if($scope.showDetails) $scope.showDetails = false;
 		else $scope.showDetails = true;
 	};
 }]).
-controller('TestController', ['$scope','Restangular', '$http', function($scope, Restangular, $http) {
-	//var apiKey = "1nQW7qp.9dWZi5vfW3C3hZlVk0a1MCGW:"; << need to encode base64
-	$scope.apiKey = "MW5RVzdxcC45ZFdaaTV2ZlczQzNoWmxWazBhMU1DR1c6";
+service('AsanaService', ['Restangular', function(Restangular) {
 
-	$scope.minimal = false;
 
-	// getValue('apiKey', function(response) {
-	// 	console.log(response.apiKey);
+	var storeKey = 'asanaStore';
+	this.me = {};
+	this.team = [];
+	this.workspaces = [];
+	this.projects = [];
+	this.tasks = [];
+	// stories reside inside their respective tasks
 
-	// });
+	var _this = this;
 
-	Restangular.setDefaultHeaders({'Authorization': 'Basic ' + $scope.apiKey });
-	Restangular.setBaseUrl('https://app.asana.com/api/1.0/');
-
-	// Tasks for Alfred
-	$scope.tasks = [];
-	$scope.projects = [];
-	$scope.workspaces = [];
-	$scope.user = {};
-
-	
-	Restangular.one('users/me').get().then(function(response){
-		//console.log("Me", response.data);
-		// for(var imageKey in response.data.photo) {
-		// 	var photoLink = response.data.photo[imageKey];
-		// 	$http.get(photoLink, {responseType: 'blob'}).success(function(blob) {
-		//     	blob.name = imageKey;
-		//      	writeFile(blob);
-		//      	response.data.photo[imageKey] = window.URL.createObjectURL(blob);
-		//     });
-		// }
-		$scope.user = response.data;
-		$scope.workspaces = response.data.workspaces;
+	// default error handling
+	Restangular.setErrorInterceptor(function(response, deferred, responseHandler) {
+    	/*
+			TODO show the user the error so they can react accordingly.
+    	*/
+	    console.error('Request failed with status: ', response.status, response);
+	    return true; // error not handled
 	});
 
-
-	Restangular.one('workspaces/78645207311/projects').get().then(function(response) {
-		//console.log("Projects", JSON.stringify(response.data));
-		//Projects [{"id":78647819937,"name":"Build Marketlytics website"},{"id":78647819954,"name":"online store to sell custom analytics scripts + services"},{"id":752920883901,"name":"tag1"},{"id":752920883904,"name":"tag2"},{"id":752920883907,"name":"tag3"},{"id":2714521945106,"name":"GA+CM Custom Dashboard"},{"id":2852843505909,"name":"James (Wordsru) GA Backend implementation"},{"id":7941251682209,"name":"Obaid Tasks"},{"id":15571422131519,"name":"Analytics Tasks"},{"id":111732829289,"name":"ML overview"},{"id":2972783632330,"name":"OGF Reporting"},{"id":4017413656450,"name":"fastspring data import KM"},{"id":4743637076618,"name":"SeamBliss"},{"id":4756052555961,"name":"Meeting Tasks"},{"id":7631925782755,"name":"Hussain Tasks"},{"id":7761381298865,"name":"Recuritment"},{"id":7940946686036,"name":"Mashhood Tasks"},{"id":8827900312555,"name":"UCC-v2"},{"id":18823615915441,"name":"Mooez Tasks"},{"id":19516083824667,"name":"Shamroze"},{"id":19516083824669,"name":"Haris"},{"id":19516083824731,"name":"Kashif"},{"id":19718851325201,"name":"Alfred"}] index.js:21
-		$scope.projects = response.data;
-	});
-
-
-	Restangular.one('projects/19718851325201/tasks').get().then(function(response) {
-		var tasks = [];
-		for(var taskIndex in response.data) {
-			var task = response.data[taskIndex];
-			Restangular.one('tasks', task.id).get().then(function(response) {
-				var fullTask = response.data;
-				Restangular.one('tasks', task.id).one('stories').get().then(function(sResponse) {
-					fullTask.stories = sResponse.data;
-					console.log(fullTask);
-					tasks.push(fullTask);
-				});
-			});
+	this.selectUser = function(userId) {
+		for(var x = 0; x < _this.team; x++) {
+			_this.team[x].isSelected = _this.team[x].id == userId;
 		}
-
-
-		$scope.tasks = tasks;
-	});
-
-	$scope.toggleMinimal = function() {
-		if($scope.minimal) {
-			chrome.app.window.current().setBounds({ height: 450, width: 400 });
-			$scope.minimal = false;
-		} else {
-			chrome.app.window.current().setBounds({ height: 69, width: 450 });
-			$scope.minimal = true;
-		}
+		_this.sync();
 	};
 
-	$scope.details = function(itemId) {
-		var el = $('#item' + itemId);
-		var arrow = el.find('.glyphicon').first();
-
-		if(arrow.hasClass('glyphicon-chevron-right')) {
-			arrow.removeClass('glyphicon-chevron-right');
-			arrow.addClass('glyphicon-chevron-down');
-			el.append('<div class="details">Details will come here..</div>');
-
-		} else {
-			arrow.addClass('glyphicon-chevron-right');
-			arrow.removeClass('glyphicon-chevron-down');
-			el.find('.details').remove();
+	this.selectWorkspace = function(workspaceId) {
+		console.log("workspaceId", workspaceId);
+		for(var x = 0; x < _this.workspaces.length; x++) {
+			_this.workspaces[x]['isSelected'] = (workspaceId == _this.workspaces[x].id);
 		}
+
+		Restangular.one('workspaces/' + workspaceId + '/projects').get().then(function(response) {
+			_this.projects = response.data;
+			_this.selectProject(response.data[0].id);
+		});
+
+		Restangular.one('workspaces', workspaceId).one('users').get().then(function(response) {
+			var users = [];
+			users.push({
+				id: '0',
+				name: 'Show all',
+				isSelected: true
+			});
+
+			for(var x = 0; x < response.data.length; x++) {
+				response.data[x].isSelected = false; 
+				users.push(response.data[x]);
+			}
+			_this.team = users;
+			_this.sync();
+		});
+	};
+
+	this.selectProject = function(projectId) {
+		console.log('selectedProject', projectId);
+		for(var x = 0; x < _this.projects.length; x++) {
+			_this.projects[x]['isSelected'] = (projectId == _this.projects[x].id);
+		}
+
+		Restangular.one('projects/' + projectId + '/tasks?opt_fields=assignee,completed,due_on,name').get().then(function(response) {
+			_this.tasks = response.data;
+			_this.sync(); // done at the end (when tasks are fetched and on each item)
+		});
+	};
+
+	this.findTask = function(taskId) {
+		for(var x = 0; x < _this.tasks.length; x++) {
+			var task = _this.tasks[x];
+			if(task.id === taskId) {
+				return task;
+			}
+		}
+
+		return null;
+	};
+
+	this.fetchTaskDetails = function(taskId) {
+
+		var task = _this.findTask(taskId);
+		if(task === null) {
+			console.error('Unable to find task with ID', taskId);
+			return;
+		}
+
+		if(typeof task.stories !== 'undefined') return; // already fetched before.
+
+		Restangular.one('tasks', task.id).one('stories').get().then(function(response) {
+			task.stories = response.data;
+			_this.sync();
+		});
+	};
+
+	this.getActiveProject = function() {
+		for(var x = 0; x < _this.projects.length; x++) {
+			var project = _this.projects[x];
+			if(project.isSelected) {
+				return project;
+			}
+		}		
+		return _this.projects[0];
+	};
+
+	this.refresh = function(refreshEverything) {
+		if(refreshEverything) {
+			_this.getMeData();
+		} else {
+			var activeProject = _this.getActiveProject();
+			_this.selectProject(activeProject.id);
+		}
+	};
+	
+	this.sync = function() {
+		var data = {
+			me: _this.me,
+			team: _this.team,
+			workspaces: _this.workspaces,
+			projects: _this.projects,
+			tasks: _this.tasks
+		};
+
+		storeValue(storeKey, data, function() {
+			console.log('Sync complete.');
+		});
+
+	};
+
+	this.getMeData = function() {
+		Restangular.one('users/me').get().then(function(response){
+			_this.me = response.data;
+			_this.workspaces = response.data.workspaces;
+			delete _this.me.workspaces; // to avoid collisions
+			_this.selectWorkspace(_this.workspaces[0].id); // fetch projects for the first workspace
+		});
+	};
+
+	this.init = function(apiKey, scope) { // scope sent in to update the view
+		// TODO apiKey to base64
+		apiKey = 'MW5RVzdxcC45ZFdaaTV2ZlczQzNoWmxWazBhMU1DR1c6'; // need to convert orginal to Base64!
+
+		Restangular.setDefaultHeaders({'Authorization': 'Basic ' + apiKey });
+		Restangular.setBaseUrl('https://app.asana.com/api/1.0/');
+
+		getValue(storeKey, function(store) {
+			if(typeof store[storeKey] === 'undefined') {
+				_this.getMeData();
+			} else {
+				var asana = store[storeKey];
+				console.log("Fetched data locally:", asana);
+				scope.$apply(function() {
+					_this.me = asana.me;
+					_this.team = asana.team;
+					_this.workspaces = asana.workspaces;
+					_this.projects = asana.projects;
+					_this.tasks = asana.tasks;
+				});
+			}
+		});
+	};
+
+	
+}]).
+controller('TestController', ['$scope','AsanaService', '$http', function($scope, AsanaService, $http) {
+	$scope.asana = AsanaService;
+	$scope.taskFilterCompleted = 'all';
+	$scope.taskFilter = {};
+
+	getValue('apiKey', function(value){
+		if(typeof value.apiKey !== 'undefined') {
+			$scope.asana.init(value.apiKey, $scope);
+		}
+	});
+
+	getValue('taskFilter', function(value){
+		if(typeof value.taskFilter !== 'undefined') {
+			$scope.taskFilter = value.taskFilter;
+			if(typeof value.taskFilter.completed !== 'undefined') {
+				if(value.taskFilter.completed) 
+					$scope.taskFilterCompleted = 'completed';
+				else
+					$scope.taskFilterCompleted = 'todo';
+			}
+		}
+	});
+
+	$scope.adjustFilter = function() {
+		if($scope.taskFilterCompleted === 'todo') {
+			$scope.taskFilter['completed'] = false;
+		} else if($scope.taskFilterCompleted === 'completed') {
+			$scope.taskFilter['completed'] = true;
+		} else if($scope.taskFilterCompleted === 'all') {
+			delete $scope.taskFilter['completed'];
+		}
+
+		if($scope.taskFilterAssigned === 0) {
+			delete $scope.taskFilter['assignee'];
+		} else {
+			$scope.asana.selectUser($scope.taskFilterAssigned);
+			$scope.taskFilter['assignee'] = $scope.taskFilterAssigned;
+		}
+
+		storeValue('taskFilter', $scope.taskFilter);
 	}
 
 }]);

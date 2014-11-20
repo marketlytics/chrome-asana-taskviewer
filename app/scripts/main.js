@@ -36,7 +36,7 @@ chrome.commands.onCommand.addListener(function(command) {
 chrome.app.runtime.onLaunched.addListener(function() {
 
   chrome.storage.onChanged.addListener(function(changes, areaName) {
-    if(areaName === 'sync') {
+    if(areaName === 'local') {
         if(typeof changes.apiKey !== 'undefined') { // apiKey has changed
             var mainWindow = chrome.app.window.get('main');
             if(mainWindow !== null) {
@@ -48,8 +48,7 @@ chrome.app.runtime.onLaunched.addListener(function() {
     }
   });
 
-  chrome.storage.sync.get('apiKey', function(value) {
-    console.log("Got this", value);
+  chrome.storage.local.get('apiKey', function(value) {
     if(typeof value.apiKey !== 'undefined' && value.apiKey !== '') {
         createAppWindow();
     } else {

@@ -2,7 +2,7 @@
 <input type="checkbox" name="task" value="{{item.id}}" ng-checked="item.completed" />&nbsp;
 <span class="task-text">{{item.name}}&nbsp;</span>
 <small ng-show="item.due_on">{{item.due_on | date:'dd MMM'}}</small>
-<a href="#" ng-click="toggle()" class="pull-right"><i class="glyphicon" ng-class="{ 'glyphicon-chevron-right': !showDetails, 'glyphicon-chevron-down': showDetails}"></i></a>
+<a href="#" ng-click="toggle(item.id)" class="pull-right"><i class="glyphicon" ng-class="{ 'glyphicon-chevron-right': !showDetails, 'glyphicon-chevron-down': showDetails}"></i></a>
 </div>
 <div class="details" ng-show="showDetails">
 	<p class="lead" ng-show="item.notes !== ''">{{item.notes}}</p>

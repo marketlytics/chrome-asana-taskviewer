@@ -3,18 +3,31 @@
 
 
 function onError(e) {
-  console.error('>>> Error!', e);
+  console.error('Error!', e);
 }
 
+
+function storeErrorCheck() {
+	if(typeof chrome.runtime.lastError !== 'undefined') {
+		console.error('Oops something went wrong while saving or getting locally.', chrome.runtime.lastError);
+	}
+}
 
 function storeValue(key, value, callback) {
 	var toStore = {};
 	toStore[key] = value;
-	chrome.storage.sync.set(toStore, callback);
+	chrome.storage.local.set(toStore, function() {
+		storeErrorCheck();
+		if(typeof callback !== 'undefined')
+			callback();
+	});
 }
 
 function getValue(key, callback) {
-	chrome.storage.sync.get(key, callback);
+	chrome.storage.local.get(key, function(store) {
+		storeErrorCheck();
+		callback(store);
+	});
 }
 
 // function writeFile(blob) {

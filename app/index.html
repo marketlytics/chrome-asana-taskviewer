@@ -6,8 +6,8 @@
 
         <!-- build:css styles/vendor.css -->
         <!-- bower:css -->
-        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" href="bower_components/angular/angular-csp.css">
+        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="bower_components/angular/angular-csp.css" />
         <!-- endbower -->
         <!-- endbuild -->
 
@@ -17,7 +17,7 @@
         <!-- endbuild -->
     </head>
     <body ng-controller="TestController">
-        <div class="container minimal" ng-show="minimal">
+        <!--<div class="container minimal" ng-show="minimal">
             <div class="checkbox pull-left">
                 <input type="checkbox" name="" value="" >
             </div>
@@ -32,8 +32,8 @@
                 <button class="btn btn-sm"><i class="glyphicon glyphicon-arrow-up"></i></button>
                 <button class="btn btn-sm"><i class="glyphicon glyphicon-arrow-down"></i></button>
             </div>
-        </div>
-        <div class="container" ng-show="!minimal">
+        </div> -->
+        <div class="container">
             <div role="tabpanel">
 
               <!-- Nav tabs -->
@@ -41,26 +41,27 @@
                 <li role="presentation" class="active"><a href="#tasks-tab" aria-controls="tasks-tab" role="tab" data-toggle="tab">Tasks</a></li>
                 <li role="presentation"><a href="#settings-tab" aria-controls="settings-tab" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-cog"></i></a></li>
                 <li role="presentation"><a href="#add-tab" aria-controls="add-tab" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-plus"></i></a></li>
-                <li role="presentation"><a href="#"><i class="glyphicon glyphicon-refresh"></i></a></li>
+                <li role="presentation"><a href="#" ng-click="asana.refresh(false)"><i class="glyphicon glyphicon-refresh"></i></a></li>
                 <li role="presentation"><a id="move-tab" href="#"><i class="glyphicon glyphicon-move"></i></a></li>
-                <li role="presentation"><a href="#" ng-click="toggleMinimal()"><i class="glyphicon glyphicon-resize-small"></i></a></li>
+                <li role="presentation"><a href="#"><i class="glyphicon glyphicon-resize-close"></i></a></li>
               </ul>
 
               <!-- Tab panes -->
               <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="tasks-tab">
-                    <ul id="tasks">
-                        <li ng-repeat="item in tasks" id="item{{item.id}}">
+                    <ul id="tasks" ng-show="asana.tasks.length > 0">
+                        <li ng-repeat="item in asana.tasks | filter:taskFilter" id="item{{item.id}}">
                             <div data-item="item"></div>
                         </li>
                     </ul>
+                    <p ng-show="asana.tasks.length <= 0">No tasks in selected project.</p>
                 </div>
                 <div role="tabpanel" class="tab-pane" id="settings-tab">
                     <div class="row">
                         <div class="col-md-12">
                             <label>Select Workspace:</label>
-                            <select id="workspace" class="form-control">
-                                <option ng-repeat="workspace in workspaces">{{workspace.name}}</option>
+                            <select id="workspace" class="form-control" ng-model="selectedWorkspace" ng-change="asana.selectWorkspace(selectedWorkspace)">
+                                <option ng-repeat="workspace in asana.workspaces" ng-selected="workspace.isSelected" value="{{workspace.id}}">{{workspace.name}}</option>
                             </select>
                         </div>
                     </div>
@@ -68,8 +69,8 @@
                     <div class="row">
                         <div class="col-md-12">
                             <label>Select Project:</label>
-                            <select id="workspace" class="form-control">
-                                <option ng-repeat="project in projects">{{project.name}}</option>
+                            <select id="workspace" class="form-control" ng-model="selectedProject" ng-change="asana.selectProject(selectedProject)">
+                                <option ng-repeat="project in asana.projects" ng-selected="project.isSelected" value="{{project.id}}">{{project.name}}</option>
                             </select>
                         </div>
                     </div>
@@ -77,10 +78,10 @@
                     <div class="row">
                         <div class="col-md-12">
                             <label>View:</label>
-                            <select id="filter-completed-tasks" class="form-control">
-                                <option>All Completed and Incomplete Tasks</option>
-                                <option>Tasks to do </option>
-                                <option>Completed Tasks</option>
+                            <select ng-model="taskFilterCompleted" ng-change="adjustFilter()" class="form-control">
+                                <option value="all">All Completed and Incomplete Tasks</option>
+                                <option value="todo">Tasks to do </option>
+                                <option value="completed">Completed Tasks</option>
                             </select>
                         </div>
                     </div>
@@ -88,11 +89,11 @@
                     <div class="row">
                         <div class="col-md-12">
                             <label>Filter Assigned:</label>
-                            <select id="filter-assigned-tasks" class="form-control">
-                                <option>No filter</option>
-                                <option>Me</option>
-                                <option>Team Person 1</option>
-                                <option>Team Person 2</option>
+                            <select ng-model="taskFilterAssigned" class="form-control" ng-change="adjustFilter()">
+                                <option ng-repeat="user in asana.team" ng-selected="user.isSelected" value="{{user.id}}">
+                                    {{user.name}}
+                                </option>
+                                
                             </select>
                         </div>
                     </div>
@@ -113,16 +114,16 @@
                     <h4>Add a new Task</h4>
                 </div>
             </div>
-            <div class="footer">2014 <a href="http://marketlytics.com" target="_blank">@marketlytics</a> - use cmd + shift + 5 to hide / unhide this window.</div>
+            <div class="footer">2014 <a href="http://marketlytics.com" target="_blank">@marketlytics</a> - use  &#8984; +  &#8679; + 5 to toggle the app</div>
         </div>
         <!-- build:js scripts/vendor.js -->
         <!-- bower:js -->
-        <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
-        <script type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="bower_components/lodash/dist/lodash.min.js"></script>
-        <script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
-        <script type="text/javascript" src="bower_components/angular-route/angular-route.min.js"></script>
-        <script type="text/javascript" src="bower_components/restangular/dist/restangular.min.js"></script>
+        <script src="bower_components/jquery/dist/jquery.js"></script>
+        <script src="bower_components/lodash/dist/lodash.min.js"></script>
+        <script src="bower_components/angular/angular.js"></script>
+        <script src="bower_components/angular-route/angular-route.min.js"></script>
+        <script src="bower_components/restangular/dist/restangular.js"></script>
+        <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
         <!-- endbower -->
         <!-- endbuild -->
 
