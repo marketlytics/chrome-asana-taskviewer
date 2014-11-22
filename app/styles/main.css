@@ -31,6 +31,12 @@ ul {
 	border-bottom: 1px solid #ddd;
 }
 
+.loading {
+	background: #fff url('../images/loading.gif') center center no-repeat;
+	height: 42px;
+	width: 43px;
+}
+
 .tab-content {
 	padding-top: 20px;
 }
@@ -70,7 +76,7 @@ input[type="text"].form-control {
 }
 
 button.btn {
-	padding: 8px 11px;
+	padding: 9px 11px;
 	text-transform: none;
 	background: #1f8dd6;
 }

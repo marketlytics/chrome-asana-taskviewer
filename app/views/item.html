@@ -1,5 +1,5 @@
 <div class="checkbox">
-<input type="checkbox" name="task" value="{{item.id}}" ng-checked="item.completed" />&nbsp;
+<input type="checkbox" name="task" value="{{item.id}}" ng-model="item.completed"  ng-change="asana.toggleTaskComplete(item.id, item.completed)"/>&nbsp;
 <span class="task-text">{{item.name}}&nbsp;</span>
 <small ng-show="item.due_on">{{item.due_on | date:'dd MMM'}}</small>
 <a href="#" ng-click="toggle(item.id)" class="pull-right"><i class="glyphicon" ng-class="{ 'glyphicon-chevron-right': !showDetails, 'glyphicon-chevron-down': showDetails}"></i></a>
@@ -13,9 +13,9 @@
 	</ul>
 
 	<div class="input-group">
-		<input type="text" class="form-control comment" placeholder="Write a comment..." />
+		<input type="text" id="comment{{item.id}}" class="form-control comment" placeholder="Write a comment..." />
 	  	<div class="input-group-btn">
-	    <button class="btn btn-sm btn-info"><i class="glyphicon glyphicon-send"></i></button>
+	    <button class="btn btn-sm btn-info" ng-click="addStory(item.id)"><i class="glyphicon glyphicon-send"></i></button>
 	 </div>
 	</div>
 	

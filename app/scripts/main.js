@@ -1,7 +1,5 @@
 'use strict';
 
-var width = 500;
-var height = 300;
 var isHidden = false;
 
 function createAppWindow() {
@@ -11,10 +9,10 @@ function createAppWindow() {
         'focused': false,
         frame: 'none',
         bounds: {
-            width: width,
-            height: height,
-            left: Math.round((screen.availWidth - width) / 2),
-            top: Math.round((screen.availHeight - height)/2)
+            width: 350,
+            height: 350,
+            left: Math.round((screen.availWidth - 350) / 2),
+            top: Math.round((screen.availHeight - 350)/2)
         }
     });
 }
@@ -42,8 +40,10 @@ chrome.app.runtime.onLaunched.addListener(function() {
             if(mainWindow !== null) {
                 mainWindow.close(); // restart the app
             }
-
-            createAppWindow();
+            setTimeout(function() {
+                createAppWindow();
+            }, 1000);
+            
         }
     }
   });
@@ -56,10 +56,10 @@ chrome.app.runtime.onLaunched.addListener(function() {
             id: 'auth',
             'focused': true,
             bounds: {
-              width: width,
-              height: 130,
-              left: Math.round((screen.availWidth - width) / 2),
-              top: Math.round((screen.availHeight - 130)/2)
+              width: 500,
+              height: 140,
+              left: Math.round((screen.availWidth - 500) / 2),
+              top: Math.round((screen.availHeight - 140)/2)
             }
         });
 

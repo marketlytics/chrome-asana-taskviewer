@@ -23,11 +23,18 @@
                 margin-top: 10px;
                 text-transform: none;
             }
+
+            a {
+                display: block;
+                text-align: center;
+                margin-top: 5px;
+            }
         </style>
     </head>
     <body>
-        <input type="text" class="form-control" id="apiKey" placeholder="Please enter your API key..." />
+        <input type="text" class="form-control" id="apiKey" placeholder="Please enter your Asana API key..." />
         <button class="btn btn-block btn-success" id="save">Save</button>
+        <p><a href="http://developer.asana.com/documentation/#api_keys" target="_blank" title="">Where is my API key?</a></p>
 
         <!-- build:js scripts/vendor.js -->
         <!-- bower:js -->
@@ -36,7 +43,7 @@
         <!-- endbuild -->
 
        <!-- build:js scripts/index.js -->
-        <script src="scripts/launch.js"></script>
+        <script src="scripts/chrome.js"></script>
         <script src="scripts/auth.js"></script>
         <!-- endbuild -->
 
