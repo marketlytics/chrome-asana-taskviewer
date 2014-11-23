@@ -54,6 +54,10 @@ ul {
 	border-bottom: 1px solid #EEE;
 }
 
+#tasks > li .checkbox {
+	cursor: pointer;
+}
+
 .task-text {
 	width: 76%;
 	white-space: nowrap;
