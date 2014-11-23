@@ -5,7 +5,7 @@
 	<a class="pull-right"><i class="glyphicon" ng-class="{ 'glyphicon-chevron-right': !showDetails, 'glyphicon-chevron-down': showDetails}"></i></a>
 </div>
 <div class="details" ng-show="showDetails">
-	<p class="lead" ng-show="item.notes !== ''">{{item.notes}}</p>
+	<p class="lead" ng-show="item.notes != ''">{{item.notes}}</p>
 	<ul class="stories">
 		<li ng-repeat="story in item.stories">
 			{{story.created_by.name}} {{story.text}} <small>{{ story.created_at | date:'dd MMM'}}</small>

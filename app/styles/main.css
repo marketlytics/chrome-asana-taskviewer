@@ -3,6 +3,10 @@ html,body {
 	-webkit-app-region: no-drag;
 }
 
+a {
+	outline: 0;
+}
+
 ul {
 	margin: 0;
 	padding: 0;
@@ -33,6 +37,10 @@ ul {
 	width: 100%;
 	background-color: #fff;
 	z-index: 2;
+}
+
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus {
+	border: none;
 }
 
 .loading {
