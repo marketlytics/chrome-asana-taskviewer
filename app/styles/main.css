@@ -76,6 +76,14 @@ ul {
 	vertical-align: middle;
 }
 
+.deadline {
+	color: #F34A48;
+}
+
+.upcoming {
+	color: #34ad00;
+}
+
 .checkbox {
 	margin: 0;
 }

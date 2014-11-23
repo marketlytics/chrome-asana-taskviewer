@@ -18,4 +18,43 @@ controller('ItemController', ['$scope', 'AsanaService', function($scope, AsanaSe
 		if($scope.showDetails) $scope.showDetails = false;
 		else $scope.showDetails = true;
 	};
+
+	// TODO: Extend as date object
+	var convertStringToDate = function(dateString) {
+		if(!dateString) 
+			return false;
+
+		//2014-11-17
+		var dateComps = dateString.split('-');
+		if(dateComps.length !== 3) 
+			return false;
+
+		//new Date(year, month, day, hours, minutes, seconds, milliseconds);
+		return new Date(dateComps[0], parseInt(dateComps[1]) - 1, dateComps[2], 0, 0, 0, 0, 0);
+	};
+
+	$scope.hasDeadlinePassed = function(deadline) {
+		var date = convertStringToDate(deadline);
+		if(!date)
+			return false;
+
+		if(date.getTime() > (new Date()).getTime()) 
+			return false;
+
+		return true;
+	};
+
+	$scope.isDeadlineUpcoming = function(deadline) {
+		var date = convertStringToDate(deadline);
+		if(!date)
+			return false;
+
+		var diff = (date.getTime() - (new Date()).getTime());
+		if(diff > 0 && diff < 86400000) 
+			return true;
+
+		return false;
+	}
+
+
 }]);
