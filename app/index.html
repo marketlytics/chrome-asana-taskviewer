@@ -38,6 +38,7 @@
 
               <!-- Nav tabs -->
               <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" ng-show="taskContext.length > 0"><a href="#" ng-click="reduceContext()" title="{{contextText}}"><i class="glyphicon glyphicon-arrow-left"></i>&nbsp; {{contextText | limitTo:6 }}...</a></li>
                 <li role="presentation" class="active"><a href="#tasks-tab" aria-controls="tasks-tab" role="tab" data-toggle="tab">Tasks</a></li>
                 <li role="presentation"><a href="#settings-tab" aria-controls="settings-tab" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-cog"></i></a></li>
                 <li role="presentation"><a href="#add-tab" aria-controls="add-tab" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-plus"></i></a></li>
@@ -49,12 +50,12 @@
               <!-- Tab panes -->
               <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="tasks-tab">
-                    <ul id="tasks" ng-show="asana.tasks.length > 0">
-                        <li ng-repeat="item in asana.tasks | filter:taskFilter" id="item{{item.id}}">
+                    <ul id="tasks" ng-show="tasks.length > 0">
+                        <li ng-repeat="item in tasks | filter:taskFilter" id="item{{item.id}}">
                             <div data-item="item"></div>
                         </li>
                     </ul>
-                    <p ng-show="asana.tasks.length <= 0">No tasks in selected project.</p>
+                    <p ng-show="tasks.length <= 0">No tasks in selected project.</p>
                 </div>
                 <div role="tabpanel" class="tab-pane" id="settings-tab">
                     <div class="row">

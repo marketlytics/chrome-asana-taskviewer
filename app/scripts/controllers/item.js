@@ -9,6 +9,10 @@ controller('ItemController', ['$scope', 'AsanaService', function($scope, AsanaSe
 		commentField.val('');
 	};
 
+	$scope.expandTasks = function(taskId) {
+		$scope.$parent.expandContext(taskId);
+	}
+
 	$scope.toggle = function(taskId) {
 		$scope.asana.fetchTaskDetails(taskId);
 		if($scope.showDetails) $scope.showDetails = false;

@@ -3,6 +3,35 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 	$scope.taskFilterCompleted = 'all';
 	$scope.taskFilter = {};
 
+	$scope.taskContext = [];
+	$scope.contextText = "";
+	$scope.tasks = [];
+
+	$scope.$watch('asana.tasks', function() {
+		$scope.tasks = $scope.asana.tasks;
+	});
+
+	var setTaskWithContext = function(task) {
+		if($scope.taskContext.length <= 0 || task === null) {
+			$scope.tasks = $scope.asana.tasks;
+		} else {
+			$scope.contextText = task.name;
+			$scope.tasks = task.subtasks;	
+		}
+	}
+
+	// refines the task scope to taskId sent
+	$scope.expandContext = function(taskId) {
+		$scope.taskContext.push(taskId);
+		setTaskWithContext($scope.asana.findTask(taskId));
+	};
+
+	// reduces the scope to the parent, or toplevel
+	$scope.reduceContext = function() {
+		$scope.taskContext.pop();
+		setTaskWithContext($scope.asana.findTask($scope.taskContext[$scope.taskContext.length - 1]));
+	};
+
 	getValue('apiKey', function(value) {
 		if(typeof value.apiKey !== 'undefined') {
 			$scope.apiKey = value.apiKey;

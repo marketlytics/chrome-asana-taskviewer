@@ -88,6 +88,12 @@ input[type="text"].form-control {
 	-webkit-border-radius: 3px;
 }
 
+.subtask a {
+	color: #325773;
+	font-weight: bold;
+	text-decoration: none;
+}
+
 .input-group-btn {
 	padding-top: 13px;
 }
