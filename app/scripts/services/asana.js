@@ -66,7 +66,7 @@ service('AsanaService', ['Restangular','$base64', function(Restangular, $base64)
 			_this.projects[x]['isSelected'] = (projectId == _this.projects[x].id);
 		}
 
-		Restangular.one('projects/' + projectId + '/tasks?opt_fields=assignee,completed,due_on,name').get().then(function(response) {
+		Restangular.one('projects/' + projectId + '/tasks?opt_fields=assignee,completed,due_on,name,notes').get().then(function(response) {
 			_this.loading -= 1;
 			_this.tasks = response.data;
 			_this.sync(); // done at the end (when tasks are fetched and on each item)
