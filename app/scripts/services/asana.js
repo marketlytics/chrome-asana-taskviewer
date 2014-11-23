@@ -74,7 +74,7 @@ service('AsanaService', ['Restangular','$base64', function(Restangular, $base64)
 	};
 
 	var deepFind = function(tasks, taskId) {
-		if(typeof tasks !== 'undefined' && tasks.length > 0) {
+		if(typeof tasks !== 'undefined' && tasks.length > 0 && taskId !== null) {
 			for(var x = 0; x < tasks.length; x++) {
 				var task = tasks[x];
 				var subtask = deepFind(task.subtasks, taskId);
@@ -92,14 +92,6 @@ service('AsanaService', ['Restangular','$base64', function(Restangular, $base64)
 
 	this.findTask = function(taskId) {
 		return deepFind(_this.tasks, taskId);
-		// for(var x = 0; x < _this.tasks.length; x++) {
-		// 	var task = _this.tasks[x];
-		// 	if(task.id === taskId) {
-		// 		return task;
-		// 	}
-		// }
-
-		// return null;
 	};
 
 	this.fetchTaskDetails = function(taskId) {

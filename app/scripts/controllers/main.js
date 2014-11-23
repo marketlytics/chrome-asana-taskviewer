@@ -7,37 +7,61 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 	$scope.contextText = "";
 	$scope.tasks = [];
 
-	$scope.$watch('asana.tasks', function() {
-		$scope.tasks = $scope.asana.tasks;
+	$scope.interval = null;
+
+	// really ugly, need to use promises!
+	getValue('taskContext', function(valForContext) {
+		if(typeof valForContext.taskContext !== 'undefined') {
+			$scope.taskContext = valForContext.taskContext;
+		}
+
+		getValue('contextText', function(valForText) {
+			if(typeof valForText.contextText !== 'undefined') {
+				$scope.contextText = valForText.contextText;
+			}
+
+			getValue('apiKey', function(valForKey) {
+				if(typeof valForKey.apiKey !== 'undefined') {
+					$scope.apiKey = valForKey.apiKey;
+					$scope.asana.init(valForKey.apiKey, $scope);
+				}
+			});
+		});
 	});
 
-	var setTaskWithContext = function(task) {
+	
+	var setTaskWithContext = function(taskId) {
+		var task = $scope.asana.findTask(taskId);
 		if($scope.taskContext.length <= 0 || task === null) {
 			$scope.tasks = $scope.asana.tasks;
 		} else {
 			$scope.contextText = task.name;
 			$scope.tasks = task.subtasks;	
 		}
+
+		storeValue('taskContext', $scope.taskContext);
+		storeValue('contextText', $scope.contextText);
 	}
+
+	$scope.$watch('asana.tasks', function() {
+		if($scope.taskContext.length > 0) {
+			setTaskWithContext($scope.taskContext[$scope.taskContext.length - 1]);
+		} else {
+			setTaskWithContext(null);
+		}
+	});
 
 	// refines the task scope to taskId sent
 	$scope.expandContext = function(taskId) {
 		$scope.taskContext.push(taskId);
-		setTaskWithContext($scope.asana.findTask(taskId));
+		setTaskWithContext(taskId);
 	};
 
 	// reduces the scope to the parent, or toplevel
 	$scope.reduceContext = function() {
 		$scope.taskContext.pop();
-		setTaskWithContext($scope.asana.findTask($scope.taskContext[$scope.taskContext.length - 1]));
+		setTaskWithContext($scope.taskContext[$scope.taskContext.length - 1]);
 	};
-
-	getValue('apiKey', function(value) {
-		if(typeof value.apiKey !== 'undefined') {
-			$scope.apiKey = value.apiKey;
-			$scope.asana.init(value.apiKey, $scope);
-		}
-	});
 
 	$scope.saveApiKey = function(apiKey) {
 		if(apiKey !== '') {
