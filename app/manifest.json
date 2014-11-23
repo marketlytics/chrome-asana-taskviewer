@@ -11,8 +11,7 @@
   		"storage",
   		"<all_urls>",
       "alwaysOnTopWindows",
-      "unlimitedStorage",
-      "experimental"
+      "unlimitedStorage"
   	],
     "commands": {
       "toggle_window": {

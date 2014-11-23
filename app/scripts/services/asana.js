@@ -7,10 +7,10 @@ service('AsanaService', ['Restangular','$base64', function(Restangular, $base64)
 	this.team = [];
 	this.workspaces = [];
 	this.projects = [];
-	this.tasks = [];
+	this.tasks = []; // stories reside inside their respective tasks
 	this.loading = 0;
-	// stories reside inside their respective tasks
 
+	
 	var _this = this;
 
 	// default error handling
@@ -149,7 +149,6 @@ service('AsanaService', ['Restangular','$base64', function(Restangular, $base64)
 		
 		Restangular.setDefaultHeaders({'Authorization': 'Basic ' + $base64.encode(apiKey + ':') });
 		Restangular.setBaseUrl('https://app.asana.com/api/1.0/');
-
 		getValue(storeKey, function(store) {
 			if(typeof store[storeKey] === 'undefined') {
 				_this.getMeData();

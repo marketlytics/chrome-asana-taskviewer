@@ -29,6 +29,10 @@ ul {
 
 .nav-tabs {
 	border-bottom: 1px solid #ddd;
+	position: fixed;
+	width: 100%;
+	background-color: #fff;
+	z-index: 2;
 }
 
 .loading {
@@ -38,7 +42,7 @@ ul {
 }
 
 .tab-content {
-	padding-top: 20px;
+	padding-top: 50px;
 }
 
 .tab-pane {
