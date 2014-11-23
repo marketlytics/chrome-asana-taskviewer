@@ -7,7 +7,40 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 	$scope.contextText = "";
 	$scope.tasks = [];
 
-	$scope.interval = null;
+	$scope.intervalTime = 1000 * 60 * 5; // 5 minutes
+	$scope.lastRefresh = (new Date()).getTime();
+
+	var intervalCallback = function(data) {
+		if(data.length > 0) {
+			var message = '';
+
+			for(var x = 0; x < data.length; x++) {
+				var obj = data[x];
+				message += '- ' + obj.name + '\n';
+			}
+
+			chrome.notifications.create('updatedTasks', {
+				iconUrl: 'images/icon-16.png',
+				type: 'basic',
+				title: 'The following (' + data.length +') tasks have been updated',
+				isClickable: false,
+				message: message
+			}, function() {});
+		}
+	};
+
+	$scope.interval = setInterval(function() {
+		var date = new Date($scope.lastRefresh)
+		$scope.asana.autoRefresh(date.toISOString(), intervalCallback);
+		$scope.lastRefresh = (new Date()).getTime();
+		storeValue('lastRefresh', $scope.lastRefresh);
+	}, $scope.intervalTime);
+
+	getValue('lastRefresh', function(value) {
+		if(typeof value.lastRefresh !== 'undefined') {
+			$scope.lastRefresh = value.lastRefresh;
+		}
+	});
 
 	// really ugly, need to use promises!
 	getValue('taskContext', function(valForContext) {

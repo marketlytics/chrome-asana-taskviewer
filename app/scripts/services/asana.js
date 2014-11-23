@@ -111,7 +111,6 @@ service('AsanaService', ['Restangular','$base64', function(Restangular, $base64)
 
 		Restangular.one('tasks', task.id).one('subtasks?opt_fields=assignee,completed,due_on,name,notes').get().then(function(response) {
 			_this.loading -= 1;
-			console.log('got subtasks', response.data);
 			task.subtasks = response.data;
 			_this.sync();
 		});
@@ -135,6 +134,28 @@ service('AsanaService', ['Restangular','$base64', function(Restangular, $base64)
 			_this.selectProject(activeProject.id);
 		}
 	};
+
+	this.autoRefresh = function(since, callback) {
+		var activeProject = _this.getActiveProject();
+		Restangular.one('tasks?opt_fields=assignee,completed,due_on,name,notes&project=' + activeProject.id + '&modified_since=' + since).get().then(function(response) {
+			for(var x = 0; x < response.data.length; x++) {
+				var updatedTask = response.data[x];
+				var actualTask = _this.findTask(updatedTask.id);
+
+				if(actualTask === null) { // Task not found, just add it in
+					_this.tasks.push(updatedTask);
+				} else {
+					actualTask.name = updatedTask.name;
+					actualTask.due_on = updatedTask.due_on;
+					actualTask.notes = updatedTask.notes;
+					actualTask.completed = updatedTask.completed;
+					actualTask.assignee = updatedTask.assignee;
+				}
+			}
+			_this.sync();
+			callback(response.data);
+		});
+	}
 	
 	this.sync = function() {
 		var data = {
