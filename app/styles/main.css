@@ -28,8 +28,7 @@ ul {
 
 #move-tab {
 	cursor: move;
-	-webkit-app-region: drag;
-}
+}	
 
 .nav-tabs {
 	border-bottom: 1px solid #ddd;
@@ -37,6 +36,8 @@ ul {
 	width: 100%;
 	background-color: #fff;
 	z-index: 2;
+	cursor: move;
+	-webkit-app-region: drag;
 }
 
 .nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus {
