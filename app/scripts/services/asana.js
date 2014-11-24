@@ -94,14 +94,14 @@ service('AsanaService', ['Restangular','$base64', function(Restangular, $base64)
 		return deepFind(_this.tasks, taskId);
 	};
 
-	this.fetchTaskDetails = function(taskId) {
+	this.fetchTaskDetails = function(taskId, force) {
 		var task = _this.findTask(taskId);
 		if(task === null) {
 			console.error('Unable to find task with ID', taskId);
 			return;
 		}
 
-		if(typeof task.stories !== 'undefined') return; // already fetched before.
+		if(typeof task.stories !== 'undefined' && !force) return; // already fetched before.
 		_this.loading += 2;
 		Restangular.one('tasks', task.id).one('stories').get().then(function(response) {
 			_this.loading -= 1;
@@ -143,7 +143,9 @@ service('AsanaService', ['Restangular','$base64', function(Restangular, $base64)
 				var actualTask = _this.findTask(updatedTask.id);
 
 				if(actualTask === null) { // Task not found, just add it in
-					_this.tasks.push(updatedTask);
+					if(!actualTask.parent) {
+						_this.tasks.push(updatedTask);
+					}
 				} else {
 					actualTask.name = updatedTask.name;
 					actualTask.due_on = updatedTask.due_on;
@@ -153,7 +155,8 @@ service('AsanaService', ['Restangular','$base64', function(Restangular, $base64)
 				}
 			}
 			_this.sync();
-			callback(response.data);
+			if(callback)
+				callback(response.data);
 		});
 	}
 	
@@ -169,7 +172,6 @@ service('AsanaService', ['Restangular','$base64', function(Restangular, $base64)
 		storeValue(storeKey, data, function() {
 			console.log('Sync complete.');
 		});
-
 	};
 
 	this.getMeData = function() {

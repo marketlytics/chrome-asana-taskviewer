@@ -20,8 +20,8 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 			}
 
 			chrome.notifications.create('updatedTasks', {
-				iconUrl: 'images/icon-16.png',
-				type: 'basic',
+				iconUrl: 'images/icon-16.png', // icon needs to be 64 x 64
+				type: 'basic', // needs to be of type list
 				title: 'The following (' + data.length +') tasks have been updated',
 				isClickable: false,
 				message: message
@@ -36,6 +36,9 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 		storeValue('lastRefresh', $scope.lastRefresh);
 	}, $scope.intervalTime);
 
+	/*
+		Get stuff from localstorage
+	*/
 	getValue('lastRefresh', function(value) {
 		if(typeof value.lastRefresh !== 'undefined') {
 			$scope.lastRefresh = value.lastRefresh;
@@ -62,7 +65,22 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 		});
 	});
 
-	
+	getValue('taskFilter', function(value) {
+		if(typeof value.taskFilter !== 'undefined') {
+			$scope.taskFilter = value.taskFilter;
+			if(typeof value.taskFilter.completed !== 'undefined') {
+				if(value.taskFilter.completed) 
+					$scope.taskFilterCompleted = 'completed';
+				else
+					$scope.taskFilterCompleted = 'todo';
+			}
+		}
+	});
+
+	/*
+		Setup your private functions
+	*/
+
 	var setTaskWithContext = function(taskId) {
 		var task = $scope.asana.findTask(taskId);
 		if($scope.taskContext.length <= 0 || task === null) {
@@ -84,17 +102,52 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 		}
 	});
 
+	var watchers = []; // used to watch over subtask changes esp for refresh.
 	// refines the task scope to taskId sent
 	$scope.expandContext = function(taskId) {
 		$scope.taskContext.push(taskId);
-		setTaskWithContext(taskId);
+		watchers.push($scope.$watchCollection(function() {
+			return $scope.asana.findTask(taskId);
+		}, function() {
+			setTaskWithContext(taskId);
+		}));
 	};
 
 	// reduces the scope to the parent, or toplevel
 	$scope.reduceContext = function() {
 		$scope.taskContext.pop();
+		(watchers.pop())(); // remove the watcher since its no longer getting observed
 		setTaskWithContext($scope.taskContext[$scope.taskContext.length - 1]);
 	};
+
+	var resetContext = function() {
+		for(var indexW in watchers) {
+			var watcher = watchers[indexW];
+			watcher(); // unwatch it
+		}
+		
+		$scope.taskContext = [];
+		$scope.contextText = '';		
+		setTaskWithContext(null);
+	};
+
+	$scope.refresh = function() {
+		if($scope.taskContext.length > 0) {
+			$scope.asana.fetchTaskDetails($scope.taskContext[$scope.taskContext.length - 1], true);	
+		} else {
+			$scope.asana.refresh(false);
+		}
+	};
+
+	$scope.changeWorkspace = function(workspace) {
+		resetContext();
+		$scope.asana.selectWorkspace(workspace);
+	}
+
+	$scope.changeProject = function(project) {
+		resetContext();
+		$scope.asana.selectProject(project);
+	}
 
 	$scope.saveApiKey = function(apiKey) {
 		if(apiKey !== '') {
@@ -103,18 +156,6 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 			});
 		}
 	};
-
-	getValue('taskFilter', function(value) {
-		if(typeof value.taskFilter !== 'undefined') {
-			$scope.taskFilter = value.taskFilter;
-			if(typeof value.taskFilter.completed !== 'undefined') {
-				if(value.taskFilter.completed) 
-					$scope.taskFilterCompleted = 'completed';
-				else
-					$scope.taskFilterCompleted = 'todo';
-			}
-		}
-	});
 
 	$scope.adjustFilter = function() {
 		if($scope.taskFilterCompleted === 'todo') {

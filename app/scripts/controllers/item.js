@@ -14,7 +14,7 @@ controller('ItemController', ['$scope', 'AsanaService', function($scope, AsanaSe
 	}
 
 	$scope.toggle = function(taskId) {
-		$scope.asana.fetchTaskDetails(taskId);
+		$scope.asana.fetchTaskDetails(taskId, false);
 		if($scope.showDetails) $scope.showDetails = false;
 		else $scope.showDetails = true;
 	};

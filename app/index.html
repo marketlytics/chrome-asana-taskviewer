@@ -42,7 +42,7 @@
                 <li role="presentation" class="active"><a href="#tasks-tab" aria-controls="tasks-tab" role="tab" data-toggle="tab">Tasks</a></li>
                 <li role="presentation"><a href="#settings-tab" aria-controls="settings-tab" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-cog"></i></a></li>
                 <li role="presentation"><a href="#add-tab" aria-controls="add-tab" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-plus"></i></a></li>
-                <li role="presentation"><a href="#" ng-click="asana.refresh(true)"><i class="glyphicon glyphicon-refresh"></i></a></li>
+                <li role="presentation"><a href="#" ng-click="refresh()"><i class="glyphicon glyphicon-refresh"></i></a></li>
                 <li role="presentation"><a id="move-tab" href="#"><i class="glyphicon glyphicon-move"></i></a></li>
                 <li role="presentation" ng-show="asana.loading != 0"><div class="loading"></div></li>
               </ul>
@@ -61,7 +61,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <label>Select Workspace:</label>
-                            <select id="workspace" class="form-control" ng-model="selectedWorkspace" ng-change="asana.selectWorkspace(selectedWorkspace)">
+                            <select id="workspace" class="form-control" ng-model="selectedWorkspace" ng-change="changeWorkspace(selectedWorkspace)">
                                 <option ng-repeat="workspace in asana.workspaces" ng-selected="workspace.isSelected" value="{{workspace.id}}">{{workspace.name}}</option>
                             </select>
                         </div>
@@ -70,7 +70,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <label>Select Project:</label>
-                            <select id="workspace" class="form-control" ng-model="selectedProject" ng-change="asana.selectProject(selectedProject)">
+                            <select id="workspace" class="form-control" ng-model="selectedProject" ng-change="changeProject(selectedProject)">
                                 <option ng-repeat="project in asana.projects" ng-selected="project.isSelected" value="{{project.id}}">{{project.name}}</option>
                             </select>
                         </div>
