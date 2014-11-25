@@ -87,6 +87,11 @@ select.form-control {
 	vertical-align: middle;
 }
 
+.assignee {
+	color: #AAA;
+	font-size: 10px;
+}
+
 .deadline {
 	color: #F34A48;
 }
