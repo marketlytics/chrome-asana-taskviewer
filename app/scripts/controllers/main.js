@@ -7,7 +7,7 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 	$scope.contextText = "";
 	$scope.tasks = [];
 
-	$scope.intervalTime = 30000;//1000 * 60 * 5; // 5 minutes
+	$scope.intervalTime = 1000 * 60 * 5; // 5 minutes
 	$scope.lastRefresh = (new Date()).getTime();
 
 	var intervalCallback = function(data) {
@@ -60,6 +60,8 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 				if(typeof valForKey.apiKey !== 'undefined') {
 					$scope.apiKey = valForKey.apiKey;
 					AsanaService.init(valForKey.apiKey, $scope);
+				} else {
+					Bugsnag.notify("AsanaError", "API Key was undefined. Unable to init.");
 				}
 			});
 		});
@@ -105,6 +107,7 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 	var watchers = []; // used to watch over subtask changes esp for refresh.
 	// refines the task scope to taskId sent
 	$scope.expandContext = function(taskId) {
+		tracker.sendEvent('task', 'subtask-drill-down', $scope.taskContext.length);
 		$scope.taskContext.push(taskId);
 		watchers.push($scope.$watchCollection(function() {
 			return AsanaService.findTask(taskId);
@@ -115,6 +118,7 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 
 	// reduces the scope to the parent, or toplevel
 	$scope.reduceContext = function() {
+		tracker.sendEvent('task', 'subtask-move-up', $scope.taskContext.length);
 		$scope.taskContext.pop();
 		(watchers.pop())(); // remove the watcher since its no longer getting observed
 		setTaskWithContext($scope.taskContext[$scope.taskContext.length - 1]);
@@ -132,6 +136,7 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 	};
 
 	$scope.refresh = function() {
+		tracker.sendEvent('app', 'refresh');
 		if($scope.taskContext.length > 0) {
 			AsanaService.fetchTaskDetails($scope.taskContext[$scope.taskContext.length - 1], true);	
 		} else {
@@ -140,16 +145,19 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 	};
 
 	$scope.changeWorkspace = function(workspace) {
+		tracker.sendEvent('app', 'changeWorkspace');
 		resetContext();
 		AsanaService.selectWorkspace(workspace);
 	}
 
 	$scope.changeProject = function(project) {
+		tracker.sendEvent('app', 'changeProject');
 		resetContext();
 		AsanaService.selectProject(project);
 	}
 
 	$scope.saveApiKey = function(apiKey) {
+		tracker.sendEvent('app', 'updateAPIKey');
 		if(apiKey !== '') {
 			storeValue('apiKey', apiKey, function() {
 				console.log('APIKey updated.')
@@ -158,6 +166,7 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 	};
 
 	$scope.adjustFilter = function() {
+		tracker.sendEvent('app', 'adjustFilter');
 		if($scope.taskFilterCompleted === 'todo') {
 			$scope.taskFilter['completed'] = false;
 		} else if($scope.taskFilterCompleted === 'completed') {

@@ -128,17 +128,21 @@
         <script src="bower_components/restangular/dist/restangular.js"></script>
         <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
         <script src="bower_components/angular-base64/angular-base64.js"></script>
+        <script src="bower_components/chrome-platform-analytics/google-analytics-bundle.js"></script>
         <!-- endbower -->
         <!-- endbuild -->
-
+        
+        <!-- Bugsnag line 302 has been edited to comply with CSR, so it has been included seperately -- >
+        
         <!-- build:js scripts/index.js -->
+        <script src="scripts/vendor/bugsnag.js"></script>
         <script src="scripts/chrome.js"></script>
         <script src="scripts/index.js"></script>
         <script src="scripts/controllers/main.js"></script>
         <script src="scripts/controllers/item.js"></script>
         <script src="scripts/directives/item.js"></script>
         <script src="scripts/services/asana.js"></script>
-
         <!-- endbuild -->
+
     </body>
 </html>

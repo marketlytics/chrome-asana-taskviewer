@@ -13,6 +13,10 @@ ul {
 	list-style: none;
 }
 
+select.form-control {
+	cursor: pointer;
+}
+
 .footer {
 	position: fixed;
 	bottom: 0;

@@ -4,16 +4,19 @@ controller('ItemController', ['$scope', 'AsanaService', function($scope, AsanaSe
 	$scope.asana = AsanaService;
 
 	$scope.addStory = function(taskId) {
+		tracker.sendEvent('task', 'item', 'commented');
 		var commentField = $('#comment' + taskId);
 		$scope.asana.commentOnTask(taskId, commentField.val());
 		commentField.val('');
 	};
 
 	$scope.expandTasks = function(taskId) {
+		
 		$scope.$parent.expandContext(taskId);
 	}
 
 	$scope.toggle = function(taskId) {
+		tracker.sendEvent('task', 'item', 'expand');
 		$scope.asana.fetchTaskDetails(taskId, false);
 		if($scope.showDetails) $scope.showDetails = false;
 		else $scope.showDetails = true;
