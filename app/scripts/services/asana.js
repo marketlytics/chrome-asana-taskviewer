@@ -1,5 +1,5 @@
 angular.module('asanaChromeApp').
-service('AsanaService', ['Restangular','$base64', 'bugsnag', 'notify', function(Restangular, $base64, bugsnag, notify) {
+service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular, $base64, notify) {
 
 	var storeKey = 'asanaStore';
 	this.me = {};
@@ -15,7 +15,6 @@ service('AsanaService', ['Restangular','$base64', 'bugsnag', 'notify', function(
 	Restangular.setErrorInterceptor(function(response, deferred, responseHandler) {
     	_this.loading -= 1;
 	    console.error('Request failed with status: ', response);
-	    bugsnag.notify("AsanaError", "Request failed: " + JSON.stringify(response.errors));
 
 	    if(typeof response.data.errors !== 'undefined') {
 	    	notify({ message:'Error from Asana: ' + response.data.errors[0].message, classes: 'alert-custom' } );
@@ -100,7 +99,6 @@ service('AsanaService', ['Restangular','$base64', 'bugsnag', 'notify', function(
 	this.fetchTaskDetails = function(taskId, force) {
 		var task = _this.findTask(taskId);
 		if(task === null) {
-			bugsnag.notify("AsanaError", "Unable to find task ID.");
 			console.error('Unable to find task with ID', taskId);
 			notify({ message:'Oops, cant to find task ID, try refreshing?' , classes: 'alert-custom' } );
 			return;

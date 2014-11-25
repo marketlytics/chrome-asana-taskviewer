@@ -1,8 +1,6 @@
 // var fs = null;
 // var FOLDERNAME = 'testchromeapp';
 
-Bugsnag.apiKey = "0c8959e2156f1fbb387e804711470e47";
-
 window.onload = function() {
 	var service = analytics.getService('asana-chrome-app');
 	window.tracker = service.getTracker('UA-18735851-11'); 

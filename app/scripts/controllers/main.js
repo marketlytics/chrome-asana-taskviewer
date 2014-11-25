@@ -1,4 +1,4 @@
-angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaService', '$http', 'bugsnag', 'notify', function($scope, AsanaService, $http, bugsnag, notify) {
+angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaService', '$http', 'notify', function($scope, AsanaService, $http, notify) {
 	$scope.asana = AsanaService;
 	$scope.taskFilterCompleted = 'all';
 	$scope.taskFilter = {};
@@ -62,7 +62,6 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 					AsanaService.init(valForKey.apiKey, $scope);
 				} else {
 					notify({ message:'API Key is not defined, please configure it from settings.', classes: 'alert-custom' } );
-					bugsnag.notify("AsanaError", "API Key was undefined. Unable to init.");
 				}
 			});
 		});
