@@ -7,6 +7,7 @@
         <!-- build:css styles/vendor.css -->
         <!-- bower:css -->
         <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="bower_components/angular-notify/dist/angular-notify.css" />
         <!-- endbower -->
         <!-- endbuild -->
 
@@ -43,7 +44,7 @@
                 <li role="presentation"><a href="#settings-tab" aria-controls="settings-tab" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-cog"></i></a></li>
                 <li role="presentation"><a href="#add-tab" aria-controls="add-tab" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-plus"></i></a></li>
                 <li role="presentation"><a href="#" ng-click="refresh()"><i class="glyphicon glyphicon-refresh"></i></a></li>
-                <li role="presentation"><a id="move-tab" href="#"><i class="glyphicon glyphicon-move"></i></a></li>
+                <li role="presentation"><a id="move-tab"><i class="glyphicon glyphicon-move"></i></a></li>
                 <li role="presentation" ng-show="asana.loading != 0"><div class="loading"></div></li>
               </ul>
 
@@ -55,7 +56,7 @@
                             <div data-item="item"></div>
                         </li>
                     </ul>
-                    <p ng-show="tasks.length <= 0">No tasks in selected project.</p>
+                    <p ng-show="tasks.length <= 0">No tasks in selected project. Change workspace or project using the settings tab.</p>
                 </div>
                 <div role="tabpanel" class="tab-pane" id="settings-tab">
                     <div class="row">
@@ -129,7 +130,9 @@
         <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
         <script src="bower_components/angular-base64/angular-base64.js"></script>
         <script src="bower_components/chrome-platform-analytics/google-analytics-bundle.js"></script>
+        <script src="bower_components/bugsnag/src/bugsnag.js"></script>
         <script src="bower_components/angular-bugsnag/dist/angular-bugsnag.js"></script>
+        <script src="bower_components/angular-notify/dist/angular-notify.js"></script>
         <!-- endbower -->
         <!-- endbuild -->
         

@@ -17,6 +17,13 @@ select.form-control {
 	cursor: pointer;
 }
 
+.alert-custom {
+	padding: 10px 30px;
+	color: #EEE;
+	background-color: #E04836;
+	font-size: 12px;
+}
+
 .footer {
 	position: fixed;
 	bottom: 0;

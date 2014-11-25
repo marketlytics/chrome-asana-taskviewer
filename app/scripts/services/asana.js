@@ -1,6 +1,5 @@
 angular.module('asanaChromeApp').
-service('AsanaService', ['Restangular','$base64', 'bugsnag',function(Restangular, $base64, bugsnag) {
-
+service('AsanaService', ['Restangular','$base64', 'bugsnag', 'notify', function(Restangular, $base64, bugsnag, notify) {
 
 	var storeKey = 'asanaStore';
 	this.me = {};
@@ -9,18 +8,21 @@ service('AsanaService', ['Restangular','$base64', 'bugsnag',function(Restangular
 	this.projects = [];
 	this.tasks = []; // stories reside inside their respective tasks
 	this.loading = 0;
-
 	
 	var _this = this;
 
 	// default error handling
 	Restangular.setErrorInterceptor(function(response, deferred, responseHandler) {
-    	/*
-			TODO show the user the error so they can react accordingly.
-    	*/
     	_this.loading -= 1;
-	    console.error('Request failed with status: ', response.status, response);
+	    console.error('Request failed with status: ', response);
 	    bugsnag.notify("AsanaError", "Request failed: " + JSON.stringify(response.errors));
+
+	    if(typeof response.data.errors !== 'undefined') {
+	    	notify({ message:'Error from Asana: ' + response.data.errors[0].message, classes: 'alert-custom' } );
+	    } else {
+	    	notify({ message:'Unexpected error: ' + response.statusText, classes: 'alert-custom' } );
+	    }
+
 	    return true; // error not handled
 	});
 
@@ -100,6 +102,7 @@ service('AsanaService', ['Restangular','$base64', 'bugsnag',function(Restangular
 		if(task === null) {
 			bugsnag.notify("AsanaError", "Unable to find task ID.");
 			console.error('Unable to find task with ID', taskId);
+			notify({ message:'Oops, cant to find task ID, try refreshing?' , classes: 'alert-custom' } );
 			return;
 		}
 
