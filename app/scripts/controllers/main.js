@@ -7,31 +7,31 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 	$scope.contextText = "";
 	$scope.tasks = [];
 
-	$scope.intervalTime = 1000 * 60 * 5; // 5 minutes
+	$scope.intervalTime = 30000;//1000 * 60 * 5; // 5 minutes
 	$scope.lastRefresh = (new Date()).getTime();
 
 	var intervalCallback = function(data) {
 		if(data.length > 0) {
-			var message = '';
-
+			var items = [];
 			for(var x = 0; x < data.length; x++) {
 				var obj = data[x];
-				message += '- ' + obj.name + '\n';
+				items.push({ title: obj.name, message: '' });
 			}
 
 			chrome.notifications.create('updatedTasks', {
-				iconUrl: 'images/icon-16.png', // icon needs to be 64 x 64
-				type: 'basic', // needs to be of type list
-				title: 'The following (' + data.length +') tasks have been updated',
+				iconUrl: 'images/icon-64.png',
+				type: 'list',
+				title: data.length + ' task(s) have been updated',
+				message: '',
 				isClickable: false,
-				message: message
+				items: items
 			}, function() {});
 		}
 	};
 
 	$scope.interval = setInterval(function() {
 		var date = new Date($scope.lastRefresh)
-		$scope.asana.autoRefresh(date.toISOString(), intervalCallback);
+		AsanaService.autoRefresh(date.toISOString(), intervalCallback);
 		$scope.lastRefresh = (new Date()).getTime();
 		storeValue('lastRefresh', $scope.lastRefresh);
 	}, $scope.intervalTime);
@@ -59,7 +59,7 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 			getValue('apiKey', function(valForKey) {
 				if(typeof valForKey.apiKey !== 'undefined') {
 					$scope.apiKey = valForKey.apiKey;
-					$scope.asana.init(valForKey.apiKey, $scope);
+					AsanaService.init(valForKey.apiKey, $scope);
 				}
 			});
 		});
@@ -82,9 +82,9 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 	*/
 
 	var setTaskWithContext = function(taskId) {
-		var task = $scope.asana.findTask(taskId);
+		var task = AsanaService.findTask(taskId);
 		if($scope.taskContext.length <= 0 || task === null) {
-			$scope.tasks = $scope.asana.tasks;
+			$scope.tasks = AsanaService.tasks;
 		} else {
 			$scope.contextText = task.name;
 			$scope.tasks = task.subtasks;	
@@ -107,7 +107,7 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 	$scope.expandContext = function(taskId) {
 		$scope.taskContext.push(taskId);
 		watchers.push($scope.$watchCollection(function() {
-			return $scope.asana.findTask(taskId);
+			return AsanaService.findTask(taskId);
 		}, function() {
 			setTaskWithContext(taskId);
 		}));
@@ -125,7 +125,7 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 			var watcher = watchers[indexW];
 			watcher(); // unwatch it
 		}
-		
+
 		$scope.taskContext = [];
 		$scope.contextText = '';		
 		setTaskWithContext(null);
@@ -133,20 +133,20 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 
 	$scope.refresh = function() {
 		if($scope.taskContext.length > 0) {
-			$scope.asana.fetchTaskDetails($scope.taskContext[$scope.taskContext.length - 1], true);	
+			AsanaService.fetchTaskDetails($scope.taskContext[$scope.taskContext.length - 1], true);	
 		} else {
-			$scope.asana.refresh(false);
+			AsanaService.refresh(false);
 		}
 	};
 
 	$scope.changeWorkspace = function(workspace) {
 		resetContext();
-		$scope.asana.selectWorkspace(workspace);
+		AsanaService.selectWorkspace(workspace);
 	}
 
 	$scope.changeProject = function(project) {
 		resetContext();
-		$scope.asana.selectProject(project);
+		AsanaService.selectProject(project);
 	}
 
 	$scope.saveApiKey = function(apiKey) {
@@ -169,7 +169,7 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 		if($scope.taskFilterAssigned == 0) {
 			delete $scope.taskFilter['assignee'];
 		} else {
-			$scope.asana.selectUser($scope.taskFilterAssigned);
+			AsanaService.selectUser($scope.taskFilterAssigned);
 			$scope.taskFilter['assignee'] = $scope.taskFilterAssigned;
 		}
 
