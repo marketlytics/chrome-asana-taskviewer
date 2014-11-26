@@ -46,7 +46,7 @@ select.form-control {
 	position: fixed;
 	width: 100%;
 	background-color: #fff;
-	z-index: 2;
+	z-index: 3;
 	cursor: move;
 	-webkit-app-region: drag;
 }
@@ -138,11 +138,6 @@ label {
 	font-weight: normal;
 }
 
-.comment > .story-text {
-	font-weight: bold;
-	color: #666;
-}
-
 small {
 	color: #AAA;
 	font-size: 70%;
@@ -166,6 +161,15 @@ small {
 	white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
+}
+
+.story-text {
+	color: #999;
+}
+
+.comment > .story-text, .story-text a {
+	font-weight: bold;
+	color: rgb(10,110,189);
 }
 
 .stories small {

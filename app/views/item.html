@@ -9,7 +9,7 @@
 	<p ng-show="item.subtasks.length > 0" class="subtask" ng-click="expandTasks(item.id)"><a href="#"><i class="glyphicon glyphicon-expand" aria-hidden="true"></i> &nbsp;Expand subtasks</a></p>
 	<ul class="stories">
 		<li ng-repeat="story in item.stories" class="{{story.type}}">
-			{{story.created_by | assignee:asana.team}} <span class="story-text">{{story.text}}</span> <small>{{ story.created_at | date:'dd MMM'}}</small>
+			{{story.created_by | assignee:asana.team}} <span class="story-text" ng-bind-html="story.text | attachment"></span> <small>{{ story.created_at | date:'dd MMM'}}</small>
 		</li>
 	</ul>
 
