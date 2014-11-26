@@ -1,15 +1,20 @@
 <div class="checkbox" ng-click="toggle(item.id)">
+	
 	<input type="checkbox" name="task" value="{{item.id}}" ng-model="item.completed"  ng-change="asana.toggleTaskComplete(item.id, item.completed)"/>&nbsp;
-	<span class="task-text"><span class="assignee">{{ item.assignee | assignee:asana.team }}</span>&nbsp; {{item.name}}&nbsp;</span>
+	
+	<span class="task-text"><span class="assignee" title="{{ item.assignee.name }}">{{ item.assignee.name | initials }}</span>&nbsp; {{item.name}}&nbsp;</span>
+
 	<small ng-show="item.due_on" ng-class="{ 'deadline': hasDeadlinePassed(item.due_on), 'upcoming': isDeadlineUpcoming(item.due_on) }">{{item.due_on | date:'dd MMM'}}</small>
+	
 	<a class="pull-right"><i class="glyphicon" ng-class="{ 'glyphicon-chevron-right': !showDetails, 'glyphicon-chevron-down': showDetails}"></i></a>
+
 </div>
 <div class="details" ng-show="showDetails">
 	<p class="lead" ng-show="item.notes != ''">{{item.notes}}</p>
 	<p ng-show="item.subtasks.length > 0" class="subtask" ng-click="expandTasks(item.id)"><a href="#"><i class="glyphicon glyphicon-expand" aria-hidden="true"></i> &nbsp;Expand subtasks</a></p>
 	<ul class="stories">
 		<li ng-repeat="story in item.stories" class="{{story.type}}">
-			{{story.created_by | assignee:asana.team}} <span class="story-text" ng-bind-html="story.text | attachment"></span> <small>{{ story.created_at | date:'dd MMM'}}</small>
+			<span title="{{ story.created_by.name }}">{{story.created_by.name | initials }}</span> <span class="story-text" ng-bind-html="story.text | attachment"></span> <small>{{ story.created_at | date:'dd MMM'}}</small>
 		</li>
 	</ul>
 

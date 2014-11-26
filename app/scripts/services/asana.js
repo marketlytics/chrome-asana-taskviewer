@@ -68,7 +68,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 			_this.projects[x]['isSelected'] = (projectId == _this.projects[x].id);
 		}
 
-		Restangular.one('projects/' + projectId + '/tasks?opt_fields=assignee,completed,due_on,name,notes').get().then(function(response) {
+		Restangular.one('projects/' + projectId + '/tasks?opt_fields=assignee.name,assignee,completed,due_on,name,notes').get().then(function(response) {
 			_this.loading -= 1;
 			_this.tasks = response.data;
 			_this.sync(); // done at the end (when tasks are fetched and on each item)
@@ -112,7 +112,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 			_this.sync();
 		});
 
-		Restangular.one('tasks', task.id).one('subtasks?opt_fields=assignee,completed,due_on,name,notes').get().then(function(response) {
+		Restangular.one('tasks', task.id).one('subtasks?opt_fields=assignee.name,assignee,completed,due_on,name,notes').get().then(function(response) {
 			_this.loading -= 1;
 			task.subtasks = response.data;
 			_this.sync();
@@ -140,7 +140,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 
 	this.autoRefresh = function(since, callback) {
 		var activeProject = _this.getActiveProject();
-		Restangular.one('tasks?opt_fields=assignee,completed,due_on,name,notes&project=' + activeProject.id + '&modified_since=' + since).get().then(function(response) {
+		Restangular.one('tasks?opt_fields=assignee.name,assignee,completed,due_on,name,notes&project=' + activeProject.id + '&modified_since=' + since).get().then(function(response) {
 			for(var x = 0; x < response.data.length; x++) {
 				var updatedTask = response.data[x];
 				var actualTask = _this.findTask(updatedTask.id);
