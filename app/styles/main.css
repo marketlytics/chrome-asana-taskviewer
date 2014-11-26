@@ -138,6 +138,11 @@ label {
 	font-weight: normal;
 }
 
+.comment > .story-text {
+	font-weight: bold;
+	color: #666;
+}
+
 small {
 	color: #AAA;
 	font-size: 70%;
