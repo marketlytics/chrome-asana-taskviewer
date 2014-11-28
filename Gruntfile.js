@@ -157,10 +157,18 @@ module.exports = function (grunt) {
     // additional tasks can operate on them
     useminPrepare: {
       options: {
-        dest: '<%= config.dist %>'
+        dest: '<%= config.dist %>',
+        flow: {
+          steps: {
+            js: ['concat'], 
+            css: ['concat', 'cssmin']            
+          },
+          post: {}
+        }
       },
       html: [
-        '<%= config.app %>/index.html'
+        '<%= config.app %>/index.html',
+        '<%= config.app %>/auth.html'
       ]
     },
 
@@ -253,8 +261,9 @@ module.exports = function (grunt) {
           cwd: '<%= config.app %>',
           dest: '<%= config.dist %>',
           src: [
+            'fonts/*.{ttf,woff}',
             '*.{ico,png,txt}',
-            'images/{,*/}*.{webp,gif}',
+            'images/{,*/}*.{webp,gif,png}',
             '{,*/}*.html',
             'styles/fonts/{,*/}*.*',
             '_locales/{,*/}*.json',
