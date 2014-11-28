@@ -16,9 +16,11 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
     	_this.loading -= 1;
 	    console.error('Request failed with status: ', response);
 
-	    if(typeof response.data.errors !== 'undefined') {
+	    if(typeof response.data !== 'undefined' && typeof response.data.errors !== 'undefined') {
+	    	tracker.sendEvent('app', 'error', response.data.errors[0].message);
 	    	notify({ message:'Error from Asana: ' + response.data.errors[0].message, classes: 'alert-custom' } );
 	    } else {
+	    	tracker.sendEvent('app', 'error', response.statusText);
 	    	notify({ message:'Unexpected error: ' + response.statusText, classes: 'alert-custom' } );
 	    }
 
@@ -99,6 +101,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 	this.fetchTaskDetails = function(taskId, force) {
 		var task = _this.findTask(taskId);
 		if(task === null) {
+			tracker.sendEvent('app', 'error', 'Unable to find task ID.');
 			console.error('Unable to find task with ID', taskId);
 			notify({ message:'Oops, cant to find task ID, try refreshing?' , classes: 'alert-custom' } );
 			return;
@@ -211,6 +214,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 
 	this.toggleTaskComplete = function(taskId, completed) {
 		_this.loading += 1;
+		tracker.sendEvent('task', 'completed', completed);
 		Restangular.one('tasks', taskId).put({ completed: completed}).then(function(response) {
 			_this.loading -= 1;
 		});
@@ -231,6 +235,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 
 	this.commentOnTask = function(taskId, comment) {
 		_this.loading += 1;
+		tracker.sendEvent('task', 'comment');
 		Restangular.one('tasks', taskId).customPOST({}, 'stories', { text: comment }).then(function(response) {
 			_this.loading -= 1;
 			_this.addStoryToTask(taskId, response.data);

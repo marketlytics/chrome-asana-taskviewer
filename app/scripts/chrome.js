@@ -1,11 +1,8 @@
 // var fs = null;
 // var FOLDERNAME = 'testchromeapp';
 
-window.onload = function() {
-	var service = analytics.getService('asana-chrome-app');
-	window.tracker = service.getTracker('UA-18735851-11'); 
-	window.tracker.sendAppView('MainView');
-};
+var service = analytics.getService('asana-chrome-app');
+window.tracker = service.getTracker('UA-18735851-11'); 
 
 function onError(e) {
   console.error('Error!', e);
@@ -14,7 +11,6 @@ function onError(e) {
 
 function storeErrorCheck() {
 	if(typeof chrome.runtime.lastError !== 'undefined') {
-		Bugsnag.notify("ChromeLocalStoreError", chrome.runtime.lastError);
 		console.error('Oops something went wrong while saving or getting locally.', chrome.runtime.lastError);
 	}
 }

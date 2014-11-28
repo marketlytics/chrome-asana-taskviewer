@@ -185,4 +185,5 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 		storeValue('taskFilter', $scope.taskFilter);
 	}
 
+	window.tracker.sendAppView('MainView');
 }]);
