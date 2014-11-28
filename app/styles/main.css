@@ -48,6 +48,8 @@ select.form-control {
 	background-color: #fff;
 	z-index: 3;
 	cursor: move;
+	padding-left: 15px;
+	margin-left: -15px;
 	-webkit-app-region: drag;
 }
 
@@ -76,6 +78,14 @@ select.form-control {
 
 #tasks > li .checkbox {
 	cursor: pointer;
+}
+
+.task-heading {
+	font-weight: bold;
+	font-size: 85%;
+	background-color: #EFEFEF;
+	padding: 8px 0;
+	margin: -9px -15px -9px -15px !important;
 }
 
 .task-text {

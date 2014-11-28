@@ -59,5 +59,10 @@ controller('ItemController', ['$scope', 'AsanaService', function($scope, AsanaSe
 		return false;
 	}
 
+	
+	$scope.isHeading = function(heading) {
+		return heading.match(/:$/g) !== null;
+	};
+
 
 }]);
