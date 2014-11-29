@@ -158,6 +158,8 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 					actualTask.notes = updatedTask.notes;
 					actualTask.completed = updatedTask.completed;
 					actualTask.assignee = updatedTask.assignee;
+					actualTask.showDetails = false;
+					delete actualTask.stories;
 				}
 			}
 			_this.sync();
