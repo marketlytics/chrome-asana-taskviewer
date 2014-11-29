@@ -37,10 +37,10 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 	};
 
 	$scope.interval = setInterval(function() {
-		var date = new Date($scope.lastRefresh)
+		var date = new Date($scope.userPrefs.lastRefresh)
 		AsanaService.autoRefresh(date.toISOString(), intervalCallback);
-		$scope.lastRefresh = (new Date()).getTime();
-		storeValue('lastRefresh', $scope.lastRefresh);
+		$scope.userPrefs.lastRefresh = (new Date()).getTime();
+		savePrefs();
 	}, $scope.intervalTime);
 
 	// Get stuff from localstorage and initalize the application
