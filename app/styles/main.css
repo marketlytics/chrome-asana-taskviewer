@@ -83,7 +83,7 @@ select.form-control {
 .task-heading {
 	font-weight: bold;
 	font-size: 85%;
-	background-color: #EFEFEF;
+	background-color: #F5F5F5;
 	padding: 8px 0;
 	margin: -9px -15px -9px -15px !important;
 }
@@ -120,6 +120,11 @@ input[type="text"].form-control {
 	border: 1px solid #DDD;
 	padding: 5px;
 	-webkit-border-radius: 3px;
+}
+
+.jump-to-asana {
+	margin-right: -5px;
+	margin-top: -10px;
 }
 
 .subtask a {

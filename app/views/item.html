@@ -10,14 +10,15 @@
 
 </div>
 <div class="details" ng-show="showDetails">
+	<a href="https://app.asana.com/0/{{project}}/{{item.id}}" target="_blank" class="jump-to-asana pull-right" title="Jump to task in Asana"><span class="glyphicon glyphicon-new-window"></span></a>
+
 	<p class="lead" ng-show="item.notes != ''">{{item.notes}}</p>
-	<p ng-show="item.subtasks.length > 0" class="subtask" ng-click="expandTasks(item.id)"><a href="#"><i class="glyphicon glyphicon-expand" aria-hidden="true"></i> &nbsp;Expand subtasks</a></p>
+	<p ng-show="item.subtasks.length > 0" class="subtask" ng-click="expandTasks(item.id)"><a href="#"><i class="glyphicon glyphicon-expand" aria-hidden="true"></i> &nbsp;Expand subtasks</a></
 	<ul class="stories">
 		<li ng-repeat="story in item.stories" class="{{story.type}}">
 			<span title="{{ story.created_by.name }}">{{story.created_by.name | initials }}</span> <span class="story-text" ng-bind-html="story.text | attachment"></span> <small>{{ story.created_at | date:'dd MMM'}}</small>
 		</li>
 	</ul>
-
 	<div class="input-group">
 		<input type="text" id="comment{{item.id}}" class="form-control comment" placeholder="Write a comment..." />
 	  	<div class="input-group-btn">

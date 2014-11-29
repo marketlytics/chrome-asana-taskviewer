@@ -104,6 +104,14 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 		}
 	});
 
+	$scope.$watch('asana.projects', function() {
+		for(var x = 0; x < $scope.asana.projects.length; x++) {
+			var project = $scope.asana.projects[x];
+			if(project.isSelected) 
+				$scope.selectedProject = project.id;
+		}
+	});
+
 	var watchers = []; // used to watch over subtask changes esp for refresh.
 	// refines the task scope to taskId sent
 	$scope.expandContext = function(taskId) {

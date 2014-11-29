@@ -4,7 +4,8 @@ directive('item', function() {
 		restrict: 'A',
 		templateUrl: 'views/item.html',
 		scope: {
-        	item: '='
+        	item: '=',
+        	project: '='
       	},
       	controller: 'ItemController'
 	};
