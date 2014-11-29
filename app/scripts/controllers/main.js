@@ -3,7 +3,7 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 
 	$scope.userPrefs = {
 		taskFilterCompleted: 'all',
-		taskFilterAssigned: null,
+		taskFilterAssigned: 0,
 		taskFilter: {},
 		taskContext: [],
 		contextText: "",
@@ -45,8 +45,9 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 
 	// Get stuff from localstorage and initalize the application
 	getValue('userPrefs', function(value) {
+		console.log('Fetched from localstorage', value.userPrefs);
 		if(typeof value.userPrefs !== 'undefined') {
-			$scope.userPrefs = userPrefs;
+			$scope.userPrefs = value.userPrefs;
 
 			// configure the apiKey 
 			if(typeof value.userPrefs.apiKey !== 'undefined') {
@@ -152,7 +153,7 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 	}
 
 	$scope.saveApiKey = function(apiKey) {
-		if(apiKey !== '') {
+		if(typeof apiKey !== 'undefined' && apiKey !== '') {
 			tracker.sendEvent('app', 'updateAPIKey');
 			$scope.userPrefs.apiKey = apiKey;
 			$scope.asana.init(apiKey, $scope);
@@ -172,12 +173,14 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 			delete $scope.userPrefs.taskFilter['completed'];
 		}
 
-		if($scope.userPrefs.taskFilterAssigned == 0) {
+		if($scope.userPrefs.taskFilterAssigned == 0 || $scope.userPrefs.taskFilterAssigned == null) {
 			delete $scope.userPrefs.taskFilter['assignee'];
 		} else {
 			AsanaService.selectUser($scope.userPrefs.taskFilterAssigned);
 			$scope.userPrefs.taskFilter['assignee'] = $scope.userPrefs.taskFilterAssigned;
 		}
+
+		console.log($scope.userPrefs.taskFilter, $scope.userPrefs.taskFilterAssigned, $scope.userPrefs.taskFilterCompleted);
 
 		savePrefs();
 	}
