@@ -12,7 +12,8 @@
 <div class="details" ng-show="item.showDetails">
 	<a href="https://app.asana.com/0/{{project}}/{{item.id}}" target="_blank" class="jump-to-asana pull-right" title="Jump to task in Asana"><span class="glyphicon glyphicon-new-window"></span></a>
 
-	<p class="lead" ng-show="item.notes != ''">{{item.notes}}</p>
+	<p class="lead" ng-show="item.notes != ''" ng-bind-html="item.notes"></p>
+
 	<p ng-show="item.subtasks.length > 0" class="subtask" ng-click="expandTasks(item.id)"><a href="#"><i class="glyphicon glyphicon-expand" aria-hidden="true"></i> &nbsp;Expand subtasks</a></
 	<ul class="stories">
 		<li ng-show="item.stories.length > storyLimit"><a ng-click="storyLimit = item.stories.length">Show all stories</a></li>
