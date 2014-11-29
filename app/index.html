@@ -53,7 +53,7 @@
                 <div role="tabpanel" class="tab-pane active" id="tasks-tab">
                     <ul id="tasks" ng-show="tasks.length > 0">
                         <li ng-repeat="item in tasks | filter:taskFilter" id="item{{item.id}}">
-                            <div data-item="item" data-project="selectedProject"></div>
+                            <div data-item="item" data-project="userPrefs.selectedProject"></div>
                         </li>
                     </ul>
                     <p ng-show="tasks.length <= 0">No tasks in selected project. Change workspace or project using the settings tab.</p>
@@ -62,7 +62,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <label>Select Workspace:</label>
-                            <select id="workspace" class="form-control" ng-model="selectedWorkspace" ng-change="changeWorkspace(selectedWorkspace)">
+                            <select id="workspace" class="form-control" ng-model="userPrefs.selectedWorkspace" ng-change="changeWorkspace(userPrefs.selectedWorkspace)">
                                 <option ng-repeat="workspace in asana.workspaces" ng-selected="workspace.isSelected" value="{{workspace.id}}">{{workspace.name}}</option>
                             </select>
                         </div>
@@ -71,7 +71,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <label>Select Project:</label>
-                            <select id="workspace" class="form-control" ng-model="selectedProject" ng-change="changeProject(selectedProject)">
+                            <select id="workspace" class="form-control" ng-model="userPrefs.selectedProject" ng-change="changeProject(userPrefs.selectedProject)">
                                 <option ng-repeat="project in asana.projects" ng-selected="project.isSelected" value="{{project.id}}">{{project.name}}</option>
                             </select>
                         </div>
@@ -80,7 +80,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <label>View:</label>
-                            <select ng-model="taskFilterCompleted" ng-change="adjustFilter()" class="form-control">
+                            <select ng-model="userPrefs.taskFilterCompleted" ng-change="adjustFilter()" class="form-control">
                                 <option value="all">All Completed and Incomplete Tasks</option>
                                 <option value="todo">Tasks to do </option>
                                 <option value="completed">Completed Tasks</option>
@@ -91,7 +91,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <label>Filter Assigned:</label>
-                            <select ng-model="taskFilterAssigned" class="form-control" ng-change="adjustFilter()">
+                            <select ng-model="userPrefs.taskFilterAssigned" class="form-control" ng-change="adjustFilter()">
                                 <option ng-repeat="user in asana.team" ng-selected="user.isSelected" value="{{user.id}}">
                                     {{user.name}}
                                 </option>
@@ -103,9 +103,9 @@
                         <div class="col-md-12">
                             <label>API Key:</label>
                             <div class="input-group">
-                                <input type="text" ng-model="apiKey" class="form-control comment" placeholder="Please enter your API key" />
+                                <input type="text" ng-model="userPrefs.apiKey" class="form-control comment" placeholder="Please enter your API key" />
                                 <div class="input-group-btn">
-                                    <button class="btn btn-sm btn-info" ng-click="saveApiKey(apiKey)"><i class="glyphicon glyphicon-save"></i></button>
+                                    <button class="btn btn-sm btn-info" ng-click="saveApiKey(userPrefs.apiKey)"><i class="glyphicon glyphicon-save"></i></button>
                                 </div>
                             </div>
                         </div>

@@ -1,14 +1,21 @@
 angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaService', '$http', 'notify', function($scope, AsanaService, $http, notify) {
 	$scope.asana = AsanaService;
-	$scope.taskFilterCompleted = 'all';
-	$scope.taskFilter = {};
 
-	$scope.taskContext = [];
-	$scope.contextText = "";
+	$scope.userPrefs = {
+		taskFilterCompleted: 'all',
+		taskFilterAssigned: null,
+		taskFilter: {},
+		taskContext: [],
+		contextText: "",
+		lastRefresh: (new Date()).getTime(),
+		apiKey: "",
+		selectedProject: null,
+		selectedWorkspace: null,
+
+	};
+
 	$scope.tasks = [];
-
 	$scope.intervalTime = 1000 * 60 * 5; // 5 minutes
-	$scope.lastRefresh = (new Date()).getTime();
 
 	var intervalCallback = function(data) {
 		if(data.length > 0) {
@@ -36,87 +43,67 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 		storeValue('lastRefresh', $scope.lastRefresh);
 	}, $scope.intervalTime);
 
-	/*
-		Get stuff from localstorage
-	*/
-	getValue('lastRefresh', function(value) {
-		if(typeof value.lastRefresh !== 'undefined') {
-			$scope.lastRefresh = value.lastRefresh;
-		}
-	});
+	// Get stuff from localstorage and initalize the application
+	getValue('userPrefs', function(value) {
+		if(typeof value.userPrefs !== 'undefined') {
+			$scope.userPrefs = userPrefs;
 
-	// really ugly, need to use promises!
-	getValue('taskContext', function(valForContext) {
-		if(typeof valForContext.taskContext !== 'undefined') {
-			$scope.taskContext = valForContext.taskContext;
-		}
-
-		getValue('contextText', function(valForText) {
-			if(typeof valForText.contextText !== 'undefined') {
-				$scope.contextText = valForText.contextText;
+			// configure the apiKey 
+			if(typeof value.userPrefs.apiKey !== 'undefined') {
+				AsanaService.init(value.userPrefs.apiKey, $scope);
+			} else {
+				tracker.sendEvent('app', 'error', 'API Key not defined.');
+				notify({ message:'API Key is not defined, please configure it from settings.', classes: 'alert-custom' } );
 			}
 
-			getValue('apiKey', function(valForKey) {
-				if(typeof valForKey.apiKey !== 'undefined') {
-					$scope.apiKey = valForKey.apiKey;
-					AsanaService.init(valForKey.apiKey, $scope);
-				} else {
-					notify({ message:'API Key is not defined, please configure it from settings.', classes: 'alert-custom' } );
+			// configure the filters
+			if(typeof value.userPrefs.taskFilter !== 'undefined') {
+				if(typeof value.userPrefs.taskFilter.completed !== 'undefined') {
+					if(value.userPrefs.taskFilter.completed) 
+						$scope.userPrefs.taskFilterCompleted = 'completed';
+					else
+						$scope.userPrefs.taskFilterCompleted = 'todo';
 				}
-			});
-		});
-	});
-
-	getValue('taskFilter', function(value) {
-		if(typeof value.taskFilter !== 'undefined') {
-			$scope.taskFilter = value.taskFilter;
-			if(typeof value.taskFilter.completed !== 'undefined') {
-				if(value.taskFilter.completed) 
-					$scope.taskFilterCompleted = 'completed';
-				else
-					$scope.taskFilterCompleted = 'todo';
 			}
 		}
 	});
 
-	/*
-		Setup your private functions
-	*/
-
+	//Setup your private function
+	var watchers = []; // used to watch over subtask changes esp for refresh.
+	
 	var setTaskWithContext = function(taskId) {
 		var task = AsanaService.findTask(taskId);
-		if($scope.taskContext.length <= 0 || task === null) {
+		if($scope.userPrefs.taskContext.length <= 0 || task === null) {
 			$scope.tasks = AsanaService.tasks;
 		} else {
-			$scope.contextText = task.name;
+			$scope.userPrefs.contextText = task.name;
 			$scope.tasks = task.subtasks;	
 		}
 
-		storeValue('taskContext', $scope.taskContext);
-		storeValue('contextText', $scope.contextText);
+		savePrefs();
 	}
 
+	var savePrefs = function() {
+		storeValue('userPrefs', $scope.userPrefs);
+	};
+
+	// configure watchers
 	$scope.$watch('asana.tasks', function() {
-		if($scope.taskContext.length > 0) {
-			setTaskWithContext($scope.taskContext[$scope.taskContext.length - 1]);
+		if($scope.userPrefs.taskContext.length > 0) {
+			setTaskWithContext($scope.userPrefs.taskContext[$scope.taskContext.length - 1]);
 		} else {
 			setTaskWithContext(null);
 		}
 	});
 
-	$scope.$watch('asana.projects', function() {
-		for(var x = 0; x < $scope.asana.projects.length; x++) {
-			var project = $scope.asana.projects[x];
-			if(project.isSelected) 
-				$scope.selectedProject = project.id;
-		}
-	});
 
-	var watchers = []; // used to watch over subtask changes esp for refresh.
+	// Controller methods
 	// refines the task scope to taskId sent
 	$scope.expandContext = function(taskId) {
-		tracker.sendEvent('task', 'subtask-drill-down', $scope.taskContext.length);
-		$scope.taskContext.push(taskId);
+		tracker.sendEvent('task', 'subtask-drill-down', $scope.userPrefs.taskContext.length);
+		$scope.userPrefs.taskContext.push(taskId);
+
+		// so as to update the tasks if anything changes
 		watchers.push($scope.$watchCollection(function() {
 			return AsanaService.findTask(taskId);
 		}, function() {
@@ -126,10 +113,10 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 
 	// reduces the scope to the parent, or toplevel
 	$scope.reduceContext = function() {
-		tracker.sendEvent('task', 'subtask-move-up', $scope.taskContext.length);
-		$scope.taskContext.pop();
+		tracker.sendEvent('task', 'subtask-move-up', $scope.userPrefs.taskContext.length);
+		$scope.userPrefs.taskContext.pop();
 		(watchers.pop())(); // remove the watcher since its no longer getting observed
-		setTaskWithContext($scope.taskContext[$scope.taskContext.length - 1]);
+		setTaskWithContext($scope.userPrefs.taskContext[$scope.userPrefs.taskContext.length - 1]);
 	};
 
 	var resetContext = function() {
@@ -138,15 +125,15 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 			watcher(); // unwatch it
 		}
 
-		$scope.taskContext = [];
-		$scope.contextText = '';		
+		$scope.userPrefs.taskContext = [];
+		$scope.userPrefs.contextText = '';		
 		setTaskWithContext(null);
 	};
 
 	$scope.refresh = function() {
 		tracker.sendEvent('app', 'refresh');
-		if($scope.taskContext.length > 0) {
-			AsanaService.fetchTaskDetails($scope.taskContext[$scope.taskContext.length - 1], true);	
+		if($scope.userPrefs.taskContext.length > 0) {
+			AsanaService.fetchTaskDetails($scope.userPrefs.taskContext[$scope.userPrefs.taskContext.length - 1], true);	
 		} else {
 			AsanaService.refresh(false);
 		}
@@ -165,33 +152,35 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 	}
 
 	$scope.saveApiKey = function(apiKey) {
-		tracker.sendEvent('app', 'updateAPIKey');
 		if(apiKey !== '') {
-			storeValue('apiKey', apiKey, function() {
-				console.log('APIKey updated.')
-			});
+			tracker.sendEvent('app', 'updateAPIKey');
+			$scope.userPrefs.apiKey = apiKey;
+			$scope.asana.init(apiKey, $scope);
+			savePrefs();
+		} else {
+			notify({ message:'Please enter a valid API key.', classes: 'alert-custom' } );
 		}
 	};
 
 	$scope.adjustFilter = function() {
 		tracker.sendEvent('app', 'adjustFilter');
-		if($scope.taskFilterCompleted === 'todo') {
-			$scope.taskFilter['completed'] = false;
-		} else if($scope.taskFilterCompleted === 'completed') {
-			$scope.taskFilter['completed'] = true;
-		} else if($scope.taskFilterCompleted === 'all') {
-			delete $scope.taskFilter['completed'];
+		if($scope.userPrefs.taskFilterCompleted === 'todo') {
+			$scope.userPrefs.taskFilter['completed'] = false;
+		} else if($scope.userPrefs.taskFilterCompleted === 'completed') {
+			$scope.userPrefs.taskFilter['completed'] = true;
+		} else if($scope.userPrefs.taskFilterCompleted === 'all') {
+			delete $scope.userPrefs.taskFilter['completed'];
 		}
 
-		if($scope.taskFilterAssigned == 0) {
-			delete $scope.taskFilter['assignee'];
+		if($scope.userPrefs.taskFilterAssigned == 0) {
+			delete $scope.userPrefs.taskFilter['assignee'];
 		} else {
-			AsanaService.selectUser($scope.taskFilterAssigned);
-			$scope.taskFilter['assignee'] = $scope.taskFilterAssigned;
+			AsanaService.selectUser($scope.userPrefs.taskFilterAssigned);
+			$scope.userPrefs.taskFilter['assignee'] = $scope.userPrefs.taskFilterAssigned;
 		}
 
-		storeValue('taskFilter', $scope.taskFilter);
+		savePrefs();
 	}
 
-	window.tracker.sendAppView('MainView');
+	tracker.sendAppView('MainView');
 }]);
