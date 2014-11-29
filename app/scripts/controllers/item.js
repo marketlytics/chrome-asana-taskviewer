@@ -11,6 +11,19 @@ controller('ItemController', ['$scope', 'AsanaService', function($scope, AsanaSe
 		commentField.val('');
 	};
 
+	$scope.selectFile = function(taskId) {
+		$('#file' + taskId).click().change(function() {
+			var files = this.files;
+			var formData = new FormData();
+
+			for(var x = 0; x < files.length; x++) {
+				formData.append('file', files[x]);
+			}
+
+			$scope.asana.addAttachmentToTask(taskId, formData);
+		});
+	}
+
 	$scope.expandTasks = function(taskId) {
 		
 		$scope.$parent.expandContext(taskId);

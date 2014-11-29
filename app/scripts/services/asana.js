@@ -75,7 +75,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 		for(var x = 0; x < _this.projects.length; x++) {
 			_this.projects[x]['isSelected'] = (projectId == _this.projects[x].id);
 		}
-		
+
 		_this.loading += 1;
 		if(projectId == 0) {
 			Restangular.one('tasks?' + optFields + '&assignee=me&workspace=' + _this.getActiveWorkspace().id).get().then(function(response) {
@@ -261,6 +261,15 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 				}
 			}
 		}
+	};
+
+	this.addAttachmentToTask = function(taskId, file) {
+		_this.loading += 1;
+		console.log(file, file.size, file.length);
+		Restangular.one('tasks', taskId).withHttpConfig({transformRequest: angular.identity}).customPOST(file, 'attachments', undefined, {'Content-Type': undefined}).then(function(response) {
+			_this.loading -= 1;
+			_this.fetchTaskDetails(taskId, true);
+		});
 	};
 
 	this.commentOnTask = function(taskId, comment) {
