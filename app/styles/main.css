@@ -104,6 +104,8 @@ select.form-control {
 .assignee {
 	color: #AAA;
 	font-size: 10px;
+	display: inline-block;
+	min-width: 17px;
 }
 
 .deadline {

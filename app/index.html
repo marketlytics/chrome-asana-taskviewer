@@ -52,7 +52,7 @@
               <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="tasks-tab">
                     <ul id="tasks" ng-show="tasks.length > 0">
-                        <li ng-repeat="item in tasks | filter:userPrefs.taskFilter as filteredTasks track by item.id" id="item{{item.id}}">
+                        <li ng-repeat="item in tasks | filter:userPrefs.taskFilter as filteredTasks track by item.id" id="item{{item.id}}" ng-class="{ 'show-detail': item.showDetails }">
                             <div data-item="item" data-project="userPrefs.selectedProject"></div>
                         </li>
                     </ul>
