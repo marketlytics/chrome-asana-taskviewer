@@ -47,7 +47,13 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 	getValue('userPrefs', function(value) {
 		console.log('Fetched from localstorage', value.userPrefs);
 		if(typeof value.userPrefs !== 'undefined') {
-			$scope.userPrefs = value.userPrefs;
+			// only copy the ones available (initally only apiKey is there)
+			for(var key in $scope.userPrefs) {
+				if(typeof value.userPrefs[key] !== 'undefined' && value.userPrefs[key] !== null) {
+					$scope.userPrefs[key] = value.userPrefs[key];		
+				}
+			}
+			
 
 			// configure the apiKey 
 			if(typeof value.userPrefs.apiKey !== 'undefined') {
@@ -152,24 +158,26 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 		AsanaService.selectProject(project);
 	};
 
-	$scope.saveApiKey = function(apiKey) {
-		if(typeof apiKey !== 'undefined' && apiKey !== '') {
+	$scope.saveApiKey = function() {
+		if($scope.userPrefs.apiKey !== '') {
 			tracker.sendEvent('app', 'updateAPIKey');
-			$scope.userPrefs.apiKey = apiKey;
-			$scope.asana.init(apiKey, $scope);
-			savePrefs();
+			storeValue('apiKey', $scope.userPrefs.apiKey);
 		} else {
 			notify({ message:'Please enter a valid API key.', classes: 'alert-custom' } );
 		}
 	};
 
 	$scope.showDetails = function(taskId) {
-		console.log("Showing details", taskId);
 		for(var x = 0; x < $scope.tasks.length; x++) {
 			var task = $scope.tasks[x];
 			if(task.id == taskId) {
-				$scope.asana.fetchTaskDetails(taskId, false);
-				task.showDetails = true;
+				if(task.showDetails) {
+					task.showDetails = false;
+				}
+				else {
+					$scope.asana.fetchTaskDetails(taskId, false);
+					task.showDetails = true;
+				}
 			}
 			else task.showDetails = false;
 		}
@@ -191,9 +199,7 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 			AsanaService.selectUser($scope.userPrefs.taskFilterAssigned);
 			$scope.userPrefs.taskFilter['assignee'] = $scope.userPrefs.taskFilterAssigned;
 		}
-
-		console.log($scope.userPrefs.taskFilter, $scope.userPrefs.taskFilterAssigned, $scope.userPrefs.taskFilterCompleted);
-
+		
 		savePrefs();
 	}
 

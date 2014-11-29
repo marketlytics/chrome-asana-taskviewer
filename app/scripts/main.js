@@ -2,7 +2,7 @@
 
 var isHidden = false;
 
-function createAppWindow() {
+var createAppWindow = function() {
     chrome.app.window.create('index.html', {
         id: 'main',
         'alwaysOnTop': true,
@@ -37,16 +37,26 @@ chrome.commands.onCommand.addListener(function(command) {
 chrome.app.runtime.onLaunched.addListener(function() {
 
     chrome.storage.onChanged.addListener(function(changes, areaName) {
+        console.log(changes, areaName);
         if(areaName === 'local') {
             if(typeof changes.apiKey !== 'undefined') { // apiKey has changed
-                var mainWindow = chrome.app.window.get('main');
-                if(mainWindow !== null) {
-                    mainWindow.close(); // restart the app
-                }
-                setTimeout(function() {
-                    createAppWindow();
-                }, 1000);
-                
+
+                chrome.storage.local.get('userPrefs', function(result) {
+                    if(typeof result.userPrefs === 'undefined') {
+                        result.userPrefs = {};
+                    }
+
+                    result.userPrefs.apiKey = changes.apiKey.newValue;
+                    chrome.storage.local.set(result, function() {
+                        var mainWindow = chrome.app.window.get('main');
+                        if(mainWindow !== null) {
+                            mainWindow.close(); // restart the app
+                        }
+                        setTimeout(function() {
+                            createAppWindow();
+                        }, 1000);
+                    });
+                });                
             }
         }
     });

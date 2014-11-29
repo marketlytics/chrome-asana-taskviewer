@@ -1,4 +1,4 @@
-<div class="checkbox" ng-class="{ 'task-heading': isHeading(item.name) }">
+<div class="checkbox" ng-class="{ 'task-heading': isHeading(item.name) }" ng-click="$parent.showDetails(item.id)">
 	
 	<input type="checkbox" name="task" value="{{item.id}}" ng-model="item.completed"  ng-change="asana.toggleTaskComplete(item.id, item.completed)" ng-show="!isHeading(item.name)"/>&nbsp;
 	

@@ -39,7 +39,7 @@
 
               <!-- Nav tabs -->
               <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" ng-show="taskContext.length > 0"><a href="#" ng-click="reduceContext()" title="{{contextText}}"><i class="glyphicon glyphicon-chevron-left"></i>&nbsp; {{contextText | limitTo:6 }}...</a></li>
+                <li role="presentation" ng-show="userPrefs.taskContext.length > 0"><a href="#" ng-click="reduceContext()" title="{{userPrefs.contextText}}"><i class="glyphicon glyphicon-chevron-left"></i>&nbsp; {{userPrefs.contextText | limitTo:6 }}...</a></li>
                 <li role="presentation" class="active"><a href="#tasks-tab" aria-controls="tasks-tab" role="tab" data-toggle="tab">Tasks</a></li>
                 <li role="presentation"><a href="#settings-tab" aria-controls="settings-tab" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-cog"></i></a></li>
                 <li role="presentation"><a href="#add-tab" aria-controls="add-tab" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-plus"></i></a></li>
@@ -52,7 +52,7 @@
               <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="tasks-tab">
                     <ul id="tasks" ng-show="tasks.length > 0">
-                        <li ng-repeat="item in tasks | filter:userPrefs.taskFilter track by item.id" id="item{{item.id}}" ng-click="showDetails(item.id)">
+                        <li ng-repeat="item in tasks | filter:userPrefs.taskFilter track by item.id" id="item{{item.id}}">
                             <div data-item="item" data-project="userPrefs.selectedProject"></div>
                         </li>
                     </ul>
@@ -105,7 +105,7 @@
                             <div class="input-group">
                                 <input type="text" ng-model="userPrefs.apiKey" class="form-control comment" placeholder="Please enter your API key" />
                                 <div class="input-group-btn">
-                                    <button class="btn btn-sm btn-info" ng-click="saveApiKey(userPrefs.apiKey)"><i class="glyphicon glyphicon-save"></i></button>
+                                    <button class="btn btn-sm btn-info" ng-click="saveApiKey()"><i class="glyphicon glyphicon-save"></i></button>
                                 </div>
                             </div>
                         </div>
