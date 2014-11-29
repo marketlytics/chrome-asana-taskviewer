@@ -78,6 +78,7 @@ select.form-control {
 #tasks > li {
 	padding: 8px 0;
 	border-bottom: 1px solid #EEE;
+	overflow: hidden;
 }
 
 #tasks > li .checkbox {
@@ -105,7 +106,7 @@ select.form-control {
 	color: #AAA;
 	font-size: 10px;
 	display: inline-block;
-	min-width: 17px;
+	min-width: 15px;
 }
 
 .deadline {
