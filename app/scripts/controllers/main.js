@@ -4,12 +4,13 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 	$scope.userPrefs = {
 		taskFilterCompleted: 'all',
 		taskFilterAssigned: 0,
+		taskFilterStatus: 'all',
 		taskFilter: {},
 		taskContext: [],
 		contextText: "",
 		lastRefresh: (new Date()).getTime(),
 		apiKey: "",
-		selectedProject: null,
+		selectedProject: 0,
 		selectedWorkspace: null,
 
 	};
@@ -103,6 +104,19 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 		}
 	});
 
+	$scope.$watch('asana.projects', function() {
+		var activeProject = $scope.asana.getActiveProject();
+		if(typeof activeProject !== 'undefined') {
+			$scope.userPrefs.selectedProject = activeProject.id;
+		}
+	});
+
+	$scope.$watch('asana.workspaces', function() {
+		var activeWorkspace = $scope.asana.getActiveWorkspace();
+		if(typeof activeWorkspace !== 'undefined') {
+			$scope.userPrefs.selectedWorkspace = activeWorkspace.id;
+		}
+	});
 
 	// Controller methods
 	// refines the task scope to taskId sent
@@ -149,12 +163,22 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 	$scope.changeWorkspace = function(workspace) {
 		tracker.sendEvent('app', 'changeWorkspace');
 		resetContext();
+		$scope.userPrefs.taskFilterAssigned = 0; // reset the assign filters
+		$scope.adjustFilter();
+		$scope.asana.selectUser(0);
 		AsanaService.selectWorkspace(workspace);
 	};
 
 	$scope.changeProject = function(project) {
 		tracker.sendEvent('app', 'changeProject');
 		resetContext();
+		
+		if(project ==  0) {
+			$scope.userPrefs.taskFilterAssigned = 0;
+			$scope.adjustFilter();
+			$scope.asana.selectUser(0);
+		} 
+
 		AsanaService.selectProject(project);
 	};
 
@@ -191,6 +215,12 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 			$scope.userPrefs.taskFilter['completed'] = true;
 		} else if($scope.userPrefs.taskFilterCompleted === 'all') {
 			delete $scope.userPrefs.taskFilter['completed'];
+		}
+
+		if($scope.userPrefs.taskFilterStatus === 'all') {
+			delete $scope.userPrefs.taskFilter['assignee_status'];
+		} else {
+			$scope.userPrefs.taskFilter['assignee_status'] = $scope.userPrefs.taskFilterStatus;
 		}
 
 		if($scope.userPrefs.taskFilterAssigned == 0 || $scope.userPrefs.taskFilterAssigned == null) {

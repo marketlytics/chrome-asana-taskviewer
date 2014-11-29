@@ -2,6 +2,7 @@ angular.module('asanaChromeApp').
 service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular, $base64, notify) {
 
 	var storeKey = 'asanaStore';
+	var optFields = 'opt_fields=assignee.name,assignee,assignee_status,completed,due_on,name,notes';
 	this.me = {};
 	this.team = [];
 	this.workspaces = [];
@@ -27,6 +28,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 	    return true; // error not handled
 	});
 
+	/* Getting data */
 	this.selectUser = function(userId) {
 		for(var x = 0; x < _this.team; x++) {
 			_this.team[x].isSelected = _this.team[x].id == userId;
@@ -43,6 +45,11 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 		Restangular.one('workspaces/' + workspaceId + '/projects').get().then(function(response) {
 			_this.loading -= 1;
 			_this.projects = response.data;
+			_this.projects.unshift({
+				id: 0,
+				name: 'All (assigned to me)',
+			});
+
 			_this.selectProject(response.data[0].id);
 		});
 
@@ -65,16 +72,24 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 	};
 
 	this.selectProject = function(projectId) {
-		_this.loading += 1;
 		for(var x = 0; x < _this.projects.length; x++) {
 			_this.projects[x]['isSelected'] = (projectId == _this.projects[x].id);
 		}
-
-		Restangular.one('projects/' + projectId + '/tasks?opt_fields=assignee.name,assignee,completed,due_on,name,notes').get().then(function(response) {
-			_this.loading -= 1;
-			_this.tasks = response.data;
-			_this.sync(); // done at the end (when tasks are fetched and on each item)
-		});
+		
+		_this.loading += 1;
+		if(projectId == 0) {
+			Restangular.one('tasks?' + optFields + '&assignee=me&workspace=' + _this.getActiveWorkspace().id).get().then(function(response) {
+				_this.loading -= 1;
+				_this.tasks = response.data;
+				_this.sync(); // done at the end (when tasks are fetched and on each item)
+			});
+		} else {
+			Restangular.one('projects/' + projectId + '/tasks?' + optFields).get().then(function(response) {
+				_this.loading -= 1;
+				_this.tasks = response.data;
+				_this.sync(); // done at the end (when tasks are fetched and on each item)
+			});
+		}
 	};
 
 	var deepFind = function(tasks, taskId) {
@@ -115,7 +130,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 			_this.sync();
 		});
 
-		Restangular.one('tasks', task.id).one('subtasks?opt_fields=assignee.name,assignee,completed,due_on,name,notes').get().then(function(response) {
+		Restangular.one('tasks', task.id).one('subtasks?' + optFields).get().then(function(response) {
 			_this.loading -= 1;
 			task.subtasks = response.data;
 			_this.sync();
@@ -132,6 +147,17 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 		return _this.projects[0];
 	};
 
+	this.getActiveWorkspace = function() {
+		for(var x = 0; x < _this.workspaces.length; x++) {
+			var workspace = _this.workspaces[x];
+			if(workspace.isSelected) {
+				return workspace;
+			}
+		}		
+		return _this.workspaces[0];
+	};
+
+
 	this.refresh = function(refreshEverything) {
 		if(refreshEverything) {
 			_this.getMeData();
@@ -143,7 +169,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 
 	this.autoRefresh = function(since, callback) {
 		var activeProject = _this.getActiveProject();
-		Restangular.one('tasks?opt_fields=assignee.name,assignee,completed,due_on,name,notes&project=' + activeProject.id + '&modified_since=' + since).get().then(function(response) {
+		Restangular.one('tasks?' + optFields + '&project=' + activeProject.id + '&modified_since=' + since).get().then(function(response) {
 			for(var x = 0; x < response.data.length; x++) {
 				var updatedTask = response.data[x];
 				var actualTask = _this.findTask(updatedTask.id);
@@ -213,6 +239,8 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 			}
 		});
 	};
+
+	/* Modifying */
 
 	this.toggleTaskComplete = function(taskId, completed) {
 		_this.loading += 1;

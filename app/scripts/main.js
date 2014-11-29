@@ -10,11 +10,11 @@ var createAppWindow = function() {
         frame: 'none',
         singleton: true,
         outerBounds: {
-            width: 350,
-            height: 350,
-            left: Math.round((screen.availWidth - 350) / 2),
-            top: Math.round((screen.availHeight - 350)/2),
-            minWidth: 350,
+            width: 420,
+            height: 460,
+            left: Math.round((screen.availWidth - 420) / 2),
+            top: Math.round((screen.availHeight - 460)/2),
+            minWidth: 420,
             minHeight: 110
         }
     });

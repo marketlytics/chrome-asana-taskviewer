@@ -52,11 +52,12 @@
               <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="tasks-tab">
                     <ul id="tasks" ng-show="tasks.length > 0">
-                        <li ng-repeat="item in tasks | filter:userPrefs.taskFilter track by item.id" id="item{{item.id}}">
+                        <li ng-repeat="item in tasks | filter:userPrefs.taskFilter as filteredTasks track by item.id" id="item{{item.id}}">
                             <div data-item="item" data-project="userPrefs.selectedProject"></div>
                         </li>
                     </ul>
                     <p ng-show="tasks.length <= 0">No tasks in selected project. Change workspace or project using the settings tab.</p>
+                    <p ng-show="tasks.length > 0 && filteredTasks.length <= 0">No tasks match the current filters.</p>
                 </div>
                 <div role="tabpanel" class="tab-pane" id="settings-tab">
                     <div class="row">
@@ -79,7 +80,7 @@
 
                     <div class="row">
                         <div class="col-md-12">
-                            <label>View:</label>
+                            <label>Show:</label>
                             <select ng-model="userPrefs.taskFilterCompleted" ng-change="adjustFilter()" class="form-control">
                                 <option value="all">All Completed and Incomplete Tasks</option>
                                 <option value="todo">Tasks to do </option>
@@ -90,8 +91,21 @@
 
                     <div class="row">
                         <div class="col-md-12">
+                            <label>Filter status:</label>
+                            <select ng-model="userPrefs.taskFilterStatus" ng-change="adjustFilter()" class="form-control">
+                                <option value="all">No Filter</option>
+                                <option value="inbox">Inbox</option>
+                                <option value="late">Later</option>
+                                <option value="today">Today</option>
+                                <option value="upcoming">Upcoming</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
                             <label>Filter Assigned:</label>
-                            <select ng-model="userPrefs.taskFilterAssigned" class="form-control" ng-change="adjustFilter()">
+                            <select ng-model="userPrefs.taskFilterAssigned" class="form-control" ng-change="adjustFilter()" ng-disabled="userPrefs.selectedProject == 0">
                                 <option ng-repeat="user in asana.team" ng-selected="user.isSelected" value="{{user.id}}">
                                     {{user.name}}
                                 </option>

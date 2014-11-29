@@ -17,6 +17,10 @@ select.form-control {
 	cursor: pointer;
 }
 
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+	opacity: 0.5;
+}
+
 .alert-custom {
 	padding: 10px 30px;
 	color: #EEE;
