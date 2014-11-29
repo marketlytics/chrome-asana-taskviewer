@@ -2,6 +2,7 @@ angular.module('asanaChromeApp').
 controller('ItemController', ['$scope', 'AsanaService', function($scope, AsanaService) {
 	$scope.showDetails = false;
 	$scope.asana = AsanaService;
+	$scope.storyLimit = 3;
 
 	$scope.addStory = function(taskId) {
 		tracker.sendEvent('task', 'item', 'commented');
