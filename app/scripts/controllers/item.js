@@ -15,13 +15,6 @@ controller('ItemController', ['$scope', 'AsanaService', function($scope, AsanaSe
 		$scope.$parent.expandContext(taskId);
 	}
 
-	$scope.toggle = function(taskId) {
-		tracker.sendEvent('task', 'item', 'expand');
-		$scope.asana.fetchTaskDetails(taskId, false);
-		if($scope.showDetails) $scope.showDetails = false;
-		else $scope.showDetails = true;
-	};
-
 	// TODO: Extend as date object
 	var convertStringToDate = function(dateString) {
 		if(!dateString) 

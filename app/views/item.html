@@ -1,4 +1,4 @@
-<div class="checkbox" ng-click="toggle(item.id)" ng-class="{ 'task-heading': isHeading(item.name) }">
+<div class="checkbox" ng-class="{ 'task-heading': isHeading(item.name) }">
 	
 	<input type="checkbox" name="task" value="{{item.id}}" ng-model="item.completed"  ng-change="asana.toggleTaskComplete(item.id, item.completed)" ng-show="!isHeading(item.name)"/>&nbsp;
 	
@@ -6,10 +6,10 @@
 
 	<small ng-show="item.due_on" ng-class="{ 'deadline': hasDeadlinePassed(item.due_on), 'upcoming': isDeadlineUpcoming(item.due_on) }">{{item.due_on | date:'dd MMM'}}</small>
 	
-	<a class="pull-right" ng-show="!isHeading(item.name)"><i class="glyphicon" ng-class="{ 'glyphicon-chevron-right': !showDetails, 'glyphicon-chevron-down': showDetails}"></i></a>
+	<a class="pull-right" ng-show="!isHeading(item.name)"><i class="glyphicon" ng-class="{ 'glyphicon-chevron-right': !item.showDetails, 'glyphicon-chevron-down': item.showDetails}"></i></a>
 
 </div>
-<div class="details" ng-show="showDetails">
+<div class="details" ng-show="item.showDetails">
 	<a href="https://app.asana.com/0/{{project}}/{{item.id}}" target="_blank" class="jump-to-asana pull-right" title="Jump to task in Asana"><span class="glyphicon glyphicon-new-window"></span></a>
 
 	<p class="lead" ng-show="item.notes != ''">{{item.notes}}</p>

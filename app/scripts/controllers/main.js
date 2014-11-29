@@ -144,13 +144,13 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 		tracker.sendEvent('app', 'changeWorkspace');
 		resetContext();
 		AsanaService.selectWorkspace(workspace);
-	}
+	};
 
 	$scope.changeProject = function(project) {
 		tracker.sendEvent('app', 'changeProject');
 		resetContext();
 		AsanaService.selectProject(project);
-	}
+	};
 
 	$scope.saveApiKey = function(apiKey) {
 		if(typeof apiKey !== 'undefined' && apiKey !== '') {
@@ -160,6 +160,18 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 			savePrefs();
 		} else {
 			notify({ message:'Please enter a valid API key.', classes: 'alert-custom' } );
+		}
+	};
+
+	$scope.showDetails = function(taskId) {
+		console.log("Showing details", taskId);
+		for(var x = 0; x < $scope.tasks.length; x++) {
+			var task = $scope.tasks[x];
+			if(task.id == taskId) {
+				$scope.asana.fetchTaskDetails(taskId, false);
+				task.showDetails = true;
+			}
+			else task.showDetails = false;
 		}
 	};
 
