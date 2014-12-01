@@ -14,7 +14,11 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 
 	// default error handling
 	Restangular.setErrorInterceptor(function(response, deferred, responseHandler) {
-    	_this.loading -= 1;
+		if(_this.loading < 0) // incase of repeated failures
+			_this.loading = 0;
+		else
+    		_this.loading -= 1;
+
 	    console.error('Request failed with status: ', response);
 
 	    if(typeof response.data !== 'undefined' && typeof response.data.errors !== 'undefined') {
@@ -72,24 +76,21 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 	};
 
 	this.selectProject = function(projectId) {
+		var path = 'projects/' + projectId + '/tasks?' + optFields;
 		for(var x = 0; x < _this.projects.length; x++) {
 			_this.projects[x]['isSelected'] = (projectId == _this.projects[x].id);
 		}
 
 		_this.loading += 1;
-		if(projectId == 0) {
-			Restangular.one('tasks?' + optFields + '&assignee=me&workspace=' + _this.getActiveWorkspace().id).get().then(function(response) {
-				_this.loading -= 1;
-				_this.tasks = response.data;
-				_this.sync(); // done at the end (when tasks are fetched and on each item)
-			});
-		} else {
-			Restangular.one('projects/' + projectId + '/tasks?' + optFields).get().then(function(response) {
-				_this.loading -= 1;
-				_this.tasks = response.data;
-				_this.sync(); // done at the end (when tasks are fetched and on each item)
-			});
-		}
+
+		if(projectId == 0) // differnt route for fetching all tasks
+			path = 'tasks?assignee=me&workspace=' + _this.getActiveWorkspace().id + '&' + optFields;
+
+		Restangular.one(path).get().then(function(response) {
+			_this.loading -= 1;
+			_this.tasks = response.data;
+			_this.sync(); // done at the end (when tasks are fetched and on each item)
+		});		
 	};
 
 	var deepFind = function(tasks, taskId) {
@@ -169,7 +170,14 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 
 	this.autoRefresh = function(since, callback) {
 		var activeProject = _this.getActiveProject();
-		Restangular.one('tasks?' + optFields + '&project=' + activeProject.id + '&modified_since=' + since).get().then(function(response) {
+		var path = '&project=' + activeProject.id;
+		
+		if(activeProject.id == 0) { // all selected
+			var activeWorkSpace = _this.getActiveWorkspace();
+			path = '&assignee=me&workspace=' + activeWorkSpace.id;
+		}
+
+		Restangular.one('tasks?' + optFields +'&modified_since=' + since + path).get().then(function(response) {
 			for(var x = 0; x < response.data.length; x++) {
 				var updatedTask = response.data[x];
 				var actualTask = _this.findTask(updatedTask.id);
