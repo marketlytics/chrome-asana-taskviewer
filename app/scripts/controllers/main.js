@@ -102,6 +102,7 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 		} else {
 			setTaskWithContext(null);
 		}
+		$('[data-toggle="tooltip"]').tooltip();
 	});
 
 	$scope.$watch('asana.projects', function() {
@@ -185,7 +186,7 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 	$scope.saveApiKey = function() {
 		if($scope.userPrefs.apiKey !== '') {
 			tracker.sendEvent('app', 'updateAPIKey');
-			storeValue('apiKey', $scope.userPrefs.apiKey);
+			storeValue('apiKey', $scope.userPrefs.apiKey);			
 		} else {
 			notify({ message:'Please enter a valid API key.', classes: 'alert-custom' } );
 		}
@@ -201,6 +202,13 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 				else {
 					$scope.asana.fetchTaskDetails(taskId, false);
 					task.showDetails = true;
+					setTimeout(function() {
+						var offset = $('#item' + taskId).offset();
+						offset.top -= 60;
+						$('html, body').animate({
+						    scrollTop: offset.top
+						});
+					}, 500);
 				}
 			}
 			else task.showDetails = false;

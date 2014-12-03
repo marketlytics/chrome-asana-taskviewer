@@ -10,23 +10,41 @@
 
 </div>
 <div class="details" ng-show="item.showDetails">
-	<a href="https://app.asana.com/0/{{project}}/{{item.id}}" target="_blank" class="jump-to-asana pull-right" title="Jump to task in Asana"><span class="glyphicon glyphicon-new-window"></span></a>
-
+	
 	<p class="lead" ng-show="item.notes != ''" ng-bind-html="item.notes"></p>
 
-	<p ng-show="item.subtasks.length > 0" class="subtask" ng-click="expandTasks(item.id)"><a href="#"><i class="glyphicon glyphicon-expand" aria-hidden="true"></i> &nbsp;Expand subtasks</a></
 	<ul class="stories">
 		<li ng-show="item.stories.length > storyLimit"><a ng-click="storyLimit = item.stories.length">Show all stories</a></li>
 		<li ng-repeat="story in item.stories" class="{{story.type}}" ng-show="(item.stories.length - $index) <= storyLimit">
 			<span title="{{ story.created_by.name }}">{{story.created_by.name | initials }}</span> <span class="story-text" ng-bind-html="story.text | attachment"></span> <small>{{ story.created_at | date:'dd MMM'}}</small>
 		</li>
 	</ul>
+
+	<div class="btn-group btn-group-sm detail-toolbar" role="group" aria-label="">
+	  	<button type="button" class="btn click" ng-if="item.subtasks.length > 0" ng-click="expandTasks(item.id)" data-tooltip="{{ item.subtasks.length + ' subtask(s)' }}">
+	  		<span class="glyphicon glyphicon-tasks"></span>
+	  	</button>
+	 	<button type="button" class="btn" data-tooltip="{{ item.num_hearts + ' heart(s)' }}" ng-if="item.hearted">
+	 		<span class="glyphicon glyphicon-heart"></span>
+	 	</button>
+	  	<button type="button" class="btn" data-tooltip="{{'Followed by: ' | appendNames:item.followers }}">
+	  		<span class="glyphicon glyphicon-user"></span>
+	  	</button>
+	  	<!-- <button type="button" class="btn">
+	  		<span class="glyphicon glyphicon-tags"></span>
+	  	</button> Can be added in future -->
+	  	<button type="button" class="btn click" ng-click="selectFile(item.id)" data-tooltip="Upload file">
+	  		<span class="glyphicon glyphicon-paperclip"></span>
+	  	</button>
+	  	<a href="https://app.asana.com/0/{{project}}/{{item.id}}" target="_blank" class="btn click" title="Jump to task in Asana" data-tooltip="Open in Asana">
+	  		<span class="glyphicon glyphicon-new-window"></span>
+	  	</a>
+	</div>
+	
 	<div class="input-group">
 		<input type="text" id="comment{{item.id}}" class="form-control comment" placeholder="Write a comment..." />
 	  	<div class="input-group-btn">
 	    	<button class="btn btn-sm btn-info" ng-click="addStory(item.id)"><i class="glyphicon glyphicon-send"></i></button>
-	    	<button class="btn btn-sm btn-info" ng-click="selectFile(item.id)"><i class="glyphicon glyphicon-upload"></i></button>
-
 	 	</div>
 	</div>
 	<form style="display:none;">

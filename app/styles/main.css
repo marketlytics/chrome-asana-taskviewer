@@ -78,11 +78,34 @@ select.form-control {
 #tasks > li {
 	padding: 8px 0;
 	border-bottom: 1px solid #EEE;
-	overflow: hidden;
 }
 
 #tasks > li .checkbox {
 	cursor: pointer;
+}
+
+#tasks > li .details {
+	overflow: hidden;
+}
+
+.detail-toolbar {
+	margin: 10px auto -8px;
+}
+
+.detail-toolbar .btn {
+	background-color: #62ACDD !important;
+	background-image: none;
+	color: #fff;
+}
+
+.detail-toolbar .btn:hover {
+	border-color: none;
+	box-shadow: none;
+}
+
+.detail-toolbar .btn.click:hover {
+	background-color: #1f8dd6 !important;
+	border-color: #1f8dd6 !important;
 }
 
 .task-heading {
