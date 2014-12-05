@@ -48,10 +48,7 @@ controller('ItemController', ['$scope', 'AsanaService', function($scope, AsanaSe
 		if(!date)
 			return false;
 
-		if(date.getTime() > (new Date()).getTime()) 
-			return false;
-
-		return true;
+		return date.getTime() < (new Date()).getTime();
 	};
 
 	$scope.isDeadlineUpcoming = function(deadline) {
@@ -60,10 +57,7 @@ controller('ItemController', ['$scope', 'AsanaService', function($scope, AsanaSe
 			return false;
 
 		var diff = (date.getTime() - (new Date()).getTime());
-		if(diff > 0 && diff < 86400000) 
-			return true;
-
-		return false;
+		return (diff > 0 && diff < 86400000) || (diff < 0 && diff > -86399999);
 	}
 
 	

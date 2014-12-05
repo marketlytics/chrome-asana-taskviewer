@@ -187,11 +187,9 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 						_this.tasks.push(updatedTask);
 					}
 				} else {
-					actualTask.name = updatedTask.name;
-					actualTask.due_on = updatedTask.due_on;
-					actualTask.notes = updatedTask.notes;
-					actualTask.completed = updatedTask.completed;
-					actualTask.assignee = updatedTask.assignee;
+					for(var key in actualTask) {
+						actualTask[key] = updatedTask[key]; // update all the values
+					}
 					actualTask.showDetails = false;
 					delete actualTask.stories;
 				}
