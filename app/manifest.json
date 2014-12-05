@@ -1,7 +1,7 @@
 {
     "name": "Asana Chrome App",
     "description": "This chrome app allows you to view and manage your tasks from your desktop.",
-    "version": "9",
+    "version": "11",
     "manifest_version": 2,
     "default_locale": "en",
     "permissions": [
