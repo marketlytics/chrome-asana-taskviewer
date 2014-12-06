@@ -202,10 +202,8 @@ small {
 	font-size: 11px;
 }
 
-.stories li {
-	white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
+.story-author {
+	color: #333;
 }
 
 .story-text {
