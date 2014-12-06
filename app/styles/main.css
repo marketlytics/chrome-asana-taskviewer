@@ -219,28 +219,9 @@ small {
 	color: #AAA;
 }
 
-
-.container.minimal {
-	padding-right: 0;
+.row .checkbox label {
+	margin-top: 15px !important;
+	padding: 0;
 }
-
-.minimal button {
-	color: #fff;
-	-webkit-border-radius: 0 !important; 
-	-webkit-box-shadow: none !important;
-}
-
-.minimal-text {
-	margin-left: 10px;
-	padding-top: 18px;
-	font-size: 15px;
-}
-
-.minimal .checkbox {
-	margin-top: 20px;
-}
-
-
-
 
 

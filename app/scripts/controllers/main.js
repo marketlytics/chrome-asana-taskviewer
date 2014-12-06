@@ -12,6 +12,8 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 		apiKey: "",
 		selectedProject: 0,
 		selectedWorkspace: null,
+		autoRefresh: true,
+		alwaysOnTop: true
 
 	};
 
@@ -38,10 +40,12 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 	};
 
 	$scope.interval = setInterval(function() {
-		var date = new Date($scope.userPrefs.lastRefresh)
-		AsanaService.autoRefresh(date.toISOString(), intervalCallback);
-		$scope.userPrefs.lastRefresh = (new Date()).getTime();
-		savePrefs();
+		if($scope.userPrefs.autoRefresh) {
+			var date = new Date($scope.userPrefs.lastRefresh)
+			AsanaService.autoRefresh(date.toISOString(), intervalCallback);
+			$scope.userPrefs.lastRefresh = (new Date()).getTime();
+			savePrefs();
+		}
 	}, $scope.intervalTime);
 
 	// Get stuff from localstorage and initalize the application
@@ -240,6 +244,15 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 		
 		savePrefs();
 	}
+
+	$scope.setWindowOnTop = function() {
+		savePrefs();
+		chrome.runtime.reload();
+	};
+
+	$scope.changeAutoRefresh = function() {
+		savePrefs();
+	};
 
 	$('#version').html(chrome.runtime.getManifest().version);
 	tracker.sendAppView('MainView');

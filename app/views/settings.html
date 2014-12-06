@@ -51,6 +51,7 @@
             </select>
         </div>
     </div>
+
     <div class="row">
         <div class="col-md-12">
             <label>API Key:</label>
@@ -59,6 +60,26 @@
                 <div class="input-group-btn">
                     <button class="btn btn-sm btn-info" ng-click="saveApiKey()"><i class="glyphicon glyphicon-save"></i></button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+      <div class="row">
+        <div class="col-md-12">
+            <div class="checkbox">
+                <label>
+                  <input type="checkbox" ng-model="userPrefs.alwaysOnTop" ng-change="setWindowOnTop()"> Window always on top
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="checkbox">
+                <label>
+                  <input type="checkbox" ng-model="userPrefs.autoRefresh" ng-change="changeAutoRefresh()"> Auto-refresh
+                </label>
             </div>
         </div>
     </div>
