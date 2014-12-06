@@ -52,9 +52,9 @@ chrome.app.runtime.onLaunched.addListener(function() {
                     }
 
                     result.userPrefs.apiKey = changes.apiKey.newValue;
-                    chrome.storage.local.set(result, function() {
+                    chrome.storage.local.set(result, function() { // save it again
                         setTimeout(function() {
-                            chrome.runtime.restart();
+                            chrome.runtime.restart(); // restart it so services are created again.
                         }, 1000);
                     });
                 });                
@@ -79,7 +79,7 @@ chrome.app.runtime.onLaunched.addListener(function() {
                   width: 500,
                   height: 140,
                   left: Math.round((screen.availWidth - 500) / 2),
-                  top: Math.round((screen.availHeight - 140)/2)
+                  top: Math.round((screen.availHeight - 140) / 2)
                 }
             });
 
