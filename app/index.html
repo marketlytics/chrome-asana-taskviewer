@@ -26,8 +26,8 @@
                 <li role="presentation" ng-show="userPrefs.taskContext.length > 0"><a href="#" ng-click="reduceContext()" title="{{userPrefs.contextText}}"><i class="glyphicon glyphicon-chevron-left"></i>&nbsp; {{userPrefs.contextText | limitTo:6 }}...</a></li>
                 <li role="presentation" class="active"><a href="#tasks-tab" aria-controls="tasks-tab" role="tab" data-toggle="tab">Tasks</a></li>
                 <li role="presentation"><a href="#settings-tab" aria-controls="settings-tab" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-cog"></i></a></li>
-                <li role="presentation"><a href="#" ng-click="refresh()"><i class="glyphicon glyphicon-refresh"></i></a></li>
                 <li role="presentation"><a href="#feedback-tab" aria-controls="feedback-tab" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-question-sign"></i></a></li>
+                <li role="presentation"><a href="#" ng-click="refresh()"><i class="glyphicon glyphicon-refresh"></i></a></li>
                 <li role="presentation"><a id="move-tab"><i class="glyphicon glyphicon-move"></i></a></li>
                 <li role="presentation" ng-show="asana.loading > 0"><div class="loading"></div></li>
               </ul>
@@ -35,146 +35,15 @@
               <!-- Tab panes -->
               <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="tasks-tab">
-                    <ul id="tasks" ng-show="tasks.length > 0">
-                        <li ng-repeat="item in tasks | filter:userPrefs.taskFilter as filteredTasks track by item.id" id="item{{item.id}}" ng-class="{ 'show-detail': item.showDetails }">
-                            <div data-item="item" data-project="userPrefs.selectedProject"></div>
-                        </li>
-                    </ul>
-                    <p ng-show="tasks.length <= 0">No tasks in selected project. Change workspace or project using the settings tab.</p>
-                    <p ng-show="tasks.length > 0 && filteredTasks.length <= 0">No tasks match the current filters.</p>
+                    <div ng-include="'views/tasks.html'"></div>
                 </div>
+                
                 <div role="tabpanel" class="tab-pane" id="settings-tab">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <label>Select Workspace:</label>
-                            <select id="workspace" class="form-control" ng-model="userPrefs.selectedWorkspace" ng-change="changeWorkspace(userPrefs.selectedWorkspace)">
-                                <option ng-repeat="workspace in asana.workspaces" ng-selected="workspace.isSelected" value="{{workspace.id}}">{{workspace.name}}</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <label>Select Project:</label>
-                            <select id="workspace" class="form-control" ng-model="userPrefs.selectedProject" ng-change="changeProject(userPrefs.selectedProject)">
-                                <option ng-repeat="project in asana.projects" ng-selected="project.isSelected" value="{{project.id}}">{{project.name}}</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <label>Show:</label>
-                            <select ng-model="userPrefs.taskFilterCompleted" ng-change="adjustFilter()" class="form-control">
-                                <option value="all">All Completed and Incomplete Tasks</option>
-                                <option value="todo">Tasks to do </option>
-                                <option value="completed">Completed Tasks</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <label>Filter status:</label>
-                            <select ng-model="userPrefs.taskFilterStatus" ng-change="adjustFilter()" class="form-control">
-                                <option value="all">No Filter</option>
-                                <option value="inbox">Inbox</option>
-                                <option value="late">Later</option>
-                                <option value="today">Today</option>
-                                <option value="upcoming">Upcoming</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <label>Filter Assigned:</label>
-                            <select ng-model="userPrefs.taskFilterAssigned" class="form-control" ng-change="adjustFilter()" ng-disabled="userPrefs.selectedProject == 0">
-                                <option ng-repeat="user in asana.team" ng-selected="user.isSelected" value="{{user.id}}">
-                                    {{user.name}}
-                                </option>
-                                
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <label>API Key:</label>
-                            <div class="input-group">
-                                <input type="text" ng-model="userPrefs.apiKey" class="form-control comment" placeholder="Please enter your API key" />
-                                <div class="input-group-btn">
-                                    <button class="btn btn-sm btn-info" ng-click="saveApiKey()"><i class="glyphicon glyphicon-save"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    <div ng-include="'views/settings.html'"></div>
+                 </div>   
 
                 <div role="tabpanel" class="tab-pane" id="feedback-tab">
-
-                    <div class="panel-group" id="help-accordion" role="tablist" aria-multiselectable="true">
-                      <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="collapseOneHeading">
-                          <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#help-accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                              What is this?
-                            </a>
-                          </h4>
-                        </div>
-                        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="collapseOneHeading">
-                          <div class="panel-body">
-                             This is a non-offical chrome app for Asana using their API. The core aim of this app is to allow the user fast and easy access to their tasks, and allow them to update its status, comment or attach files straight from desktop. It also syns stuff offline, so you can view your tasks with or without an internet connection. Finally it also as an auto-refresh built in, notifying you of changed tasks in the project / workspace you are currently active.
-                          </div>
-                        </div>
-                      </div>
-
-
-                      <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="collapseTwoHeading">
-                          <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#help-accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                              I cant understand how this works
-                            </a>
-                          </h4>
-                        </div>
-                        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseTwoHeading">
-                          <div class="panel-body">
-                             The app has two main views - the task view and the settings view. You can switch to either of them using the tabs on top. The task view shows the current tasks in the currently selected project
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="collapseThreeHeading">
-                          <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#help-accordion" href="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
-                              There is a feature missing
-                            </a>
-                          </h4>
-                        </div>
-                        <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseThreeHeading">
-                          <div class="panel-body">
-                             This is a non-offical chrome app for Asana using their API. The core aim of this app is to allow the user fast and easy access to their tasks, and allow them to update its status, comment or attach files straight from desktop. It also syns stuff offline, so you can view your tasks with or without an internet connection. Finally it also as an auto-refresh built in, notifying you of changed tasks in the project / workspace you are currently active.
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="collapseFourHeading">
-                          <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#help-accordion" href="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
-                              What is the best way to setup this app
-                            </a>
-                          </h4>
-                        </div>
-                        <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseFourHeading">
-                          <div class="panel-body">
-                             This is a non-offical chrome app for Asana using their API. The core aim of this app is to allow the user fast and easy access to their tasks, and allow them to update its status, comment or attach files straight from desktop. It also syns stuff offline, so you can view your tasks with or without an internet connection. Finally it also as an auto-refresh built in, notifying you of changed tasks in the project / workspace you are currently active.
-                          </div>
-                        </div>
-                      </div>
-
-                    </div>
+                    <div ng-include="'views/feedback.html'"></div>
                 </div>
                 
             </div>
