@@ -102,7 +102,6 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 		} else {
 			setTaskWithContext(null);
 		}
-		$('[data-toggle="tooltip"]').tooltip();
 	});
 
 	$scope.$watch('asana.projects', function() {
@@ -131,6 +130,7 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 		}, function() {
 			setTaskWithContext(taskId);
 		}));
+		$('.tooltip').remove();
 	};
 
 	// reduces the scope to the parent, or toplevel
@@ -241,5 +241,6 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 		savePrefs();
 	}
 
+	$('#version').html(chrome.runtime.getManifest().version);
 	tracker.sendAppView('MainView');
 }]);
