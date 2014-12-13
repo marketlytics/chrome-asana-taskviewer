@@ -5,7 +5,7 @@ directive('item', function() {
 		templateUrl: 'views/item.html',
 		scope: {
         	item: '=',
-        	project: '='
+        	workspace: '='
       	},
       	controller: 'ItemController'
 	};

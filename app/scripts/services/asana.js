@@ -2,7 +2,7 @@ angular.module('asanaChromeApp').
 service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular, $base64, notify) {
 
 	var storeKey = 'asanaStore';
-	var optFields = 'opt_fields=assignee.name,assignee,assignee_status,completed,due_on,name,notes,hearted,num_hearts,followers,followers.name';
+	var optFields = 'opt_fields=assignee.name,assignee,projects,assignee_status,completed,due_on,name,notes,hearted,num_hearts,followers,followers.name';
 	this.me = {};
 	this.team = [];
 	this.workspaces = [];

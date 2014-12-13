@@ -1,6 +1,6 @@
 <ul id="tasks" ng-show="tasks.length > 0">
     <li ng-repeat="item in tasks | filter:userPrefs.taskFilter as filteredTasks track by item.id" id="item{{item.id}}" ng-class="{ 'show-detail': item.showDetails }">
-        <div data-item="item" data-project="userPrefs.selectedProject"></div>
+        <div data-item="item" data-workspace="userPrefs.selectedWorkspace"></div>
     </li>
 </ul>
 <p ng-show="tasks.length <= 0">No tasks in selected project. Change workspace or project using the settings tab.</p>
