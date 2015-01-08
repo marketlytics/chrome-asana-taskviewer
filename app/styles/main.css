@@ -37,13 +37,14 @@ select.form-control {
 	width: 100%;
 	padding: 5px 0;
 	white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 #move-tab {
 	cursor: move;
-}	
+	-webkit-app-region: drag;
+}
 
 .nav-tabs {
 	border-bottom: 1px solid #ddd;
@@ -51,10 +52,8 @@ select.form-control {
 	width: 100%;
 	background-color: #fff;
 	z-index: 3;
-	cursor: move;
 	padding-left: 15px;
 	margin-left: -15px;
-	-webkit-app-region: drag;
 }
 
 .nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus {
@@ -223,5 +222,3 @@ small {
 	margin-top: 15px !important;
 	padding: 0;
 }
-
-
