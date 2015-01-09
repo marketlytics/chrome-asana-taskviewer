@@ -9,8 +9,13 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 	this.projects = [];
 	this.tasks = []; // stories reside inside their respective tasks
 	this.loading = 0;
-	this.actionsWhileOffline = []; //stores the function calls suppose to happen while
-	//the device was offline
+
+	var isDeviceOnline = function() {
+		if(typeof navigator === 'undefined' || typeof navigator.onLine === 'undefined') {
+			return true; // if we cant detect offline we assume its always online
+		}
+		return navigator.onLine;
+	};
 
 	var _this = this;
 
@@ -22,6 +27,12 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
     		_this.loading -= 1;
 
 	    console.error('Request failed with status: ', response);
+
+			if(!isDeviceOnline()) {
+				tracker.sendEvent('app', 'error', 'Unable to perform action since device offline.');
+				notify({ message:'This action is currently not available in offline mode.', classes: 'alert-custom' } );
+				return true;
+			}
 
 	    if(typeof response.data !== 'undefined' && typeof response.data.errors !== 'undefined') {
 	    	tracker.sendEvent('app', 'error', response.data.errors[0].message);
@@ -273,7 +284,6 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 
 	this.addAttachmentToTask = function(taskId, file) {
 		_this.loading += 1;
-		console.log(file, file.size, file.length);
 		Restangular.one('tasks', taskId).withHttpConfig({transformRequest: angular.identity}).customPOST(file, 'attachments', undefined, {'Content-Type': undefined}).then(function(response) {
 			_this.loading -= 1;
 			_this.fetchTaskDetails(taskId, true);
