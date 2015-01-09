@@ -29,6 +29,8 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 	    console.error('Request failed with status: ', response);
 
 			if(!isDeviceOnline()) {
+				// TODO in future detect the type of request using URL and change the message accordingly
+				// there should also be rollback of the action taken to avoid confusion
 				tracker.sendEvent('app', 'error', 'Unable to perform action since device offline.');
 				notify({ message:'This action is currently not available in offline mode.', classes: 'alert-custom' } );
 				return true;
