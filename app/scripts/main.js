@@ -4,24 +4,31 @@ var isHidden = false;
 
 var createAppWindow = function(userPrefs) {
 
+    var mainWindow = chrome.app.window.get('main');
+
+    if(mainWindow !== null) {
+      mainWindow.close();
+    }
+
     var alwaysOnTop = true;
     if(userPrefs !== null)
         alwaysOnTop = userPrefs.alwaysOnTop;
-
-    chrome.app.window.create('index.html', {
-        id: 'main',
-        'alwaysOnTop': alwaysOnTop,
-        'focused': false,
-        singleton: true,
-        outerBounds: {
-            width: 420,
-            height: 460,
-            left: Math.round((screen.availWidth - 420) / 2),
-            top: Math.round((screen.availHeight - 460)/2),
-            minWidth: 420,
-            minHeight: 110
-        }
-    });
+    setTimeout(function() {
+      chrome.app.window.create('index.html', {
+          id: 'main',
+          'alwaysOnTop': alwaysOnTop,
+          'focused': false,
+          singleton: true,
+          outerBounds: {
+              width: 420,
+              height: 460,
+              left: Math.round((screen.availWidth - 420) / 2),
+              top: Math.round((screen.availHeight - 460)/2),
+              minWidth: 420,
+              minHeight: 110
+          }
+      });
+    }, 1000);
 }
 
 chrome.commands.onCommand.addListener(function(command) {
@@ -51,25 +58,20 @@ chrome.app.runtime.onLaunched.addListener(function() {
                     }
 
                     result.userPrefs.apiKey = changes.apiKey.newValue;
+                    console.log('Updated apiKey');
                     chrome.storage.local.set(result, function() { // save it again
-                        setTimeout(function() {
-                            chrome.runtime.restart(); // restart it so services are created again.
-                        }, 1000);
+                        createAppWindow(result.userPrefs); // restart it so services are created again.
                     });
                 });
             }
         }
     });
 
-    chrome.storage.local.get('apiKey', function(value) {
-        if(typeof value.apiKey !== 'undefined' && value.apiKey !== '') {
-            chrome.storage.local.get('userPrefs', function(result) {
-                if(typeof result.userPrefs === 'undefined') {
-                    createAppWindow(null);
-                } else {
-                    createAppWindow(result.userPrefs);
-                }
-            });
+    chrome.storage.local.get('userPrefs', function(value) {
+        if(typeof value.userPrefs !== 'undefined' &&
+            typeof value.userPrefs.apiKey !== 'undefined' &&
+            value.userPrefs.apiKey !== '') {
+              createAppWindow(value.userPrefs);
         } else {
             chrome.app.window.create('auth.html', {
                 id: 'auth',
