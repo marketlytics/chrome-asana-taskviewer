@@ -5,14 +5,13 @@ var isHidden = false;
 var createAppWindow = function(userPrefs) {
 
     var alwaysOnTop = true;
-    if(userPrefs !== null) 
+    if(userPrefs !== null)
         alwaysOnTop = userPrefs.alwaysOnTop;
 
     chrome.app.window.create('index.html', {
         id: 'main',
         'alwaysOnTop': alwaysOnTop,
         'focused': false,
-        frame: 'none',
         singleton: true,
         outerBounds: {
             width: 420,
@@ -57,7 +56,7 @@ chrome.app.runtime.onLaunched.addListener(function() {
                             chrome.runtime.restart(); // restart it so services are created again.
                         }, 1000);
                     });
-                });                
+                });
             }
         }
     });

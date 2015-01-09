@@ -9,7 +9,9 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 	this.projects = [];
 	this.tasks = []; // stories reside inside their respective tasks
 	this.loading = 0;
-	
+	this.actionsWhileOffline = []; //stores the function calls suppose to happen while
+	//the device was offline
+
 	var _this = this;
 
 	// default error handling
@@ -67,7 +69,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 			});
 
 			for(var x = 0; x < response.data.length; x++) {
-				response.data[x].isSelected = false; 
+				response.data[x].isSelected = false;
 				users.push(response.data[x]);
 			}
 			_this.team = users;
@@ -90,7 +92,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 			_this.loading -= 1;
 			_this.tasks = response.data;
 			_this.sync(); // done at the end (when tasks are fetched and on each item)
-		});		
+		});
 	};
 
 	var deepFind = function(tasks, taskId) {
@@ -144,7 +146,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 			if(project.isSelected) {
 				return project;
 			}
-		}		
+		}
 		return _this.projects[0];
 	};
 
@@ -154,7 +156,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 			if(workspace.isSelected) {
 				return workspace;
 			}
-		}		
+		}
 		return _this.workspaces[0];
 	};
 
@@ -171,7 +173,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 	this.autoRefresh = function(since, callback) {
 		var activeProject = _this.getActiveProject();
 		var path = '&project=' + activeProject.id;
-		
+
 		if(activeProject.id == 0) { // all selected
 			var activeWorkSpace = _this.getActiveWorkspace();
 			path = '&assignee=me&workspace=' + activeWorkSpace.id;
@@ -199,7 +201,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 				callback(response.data);
 		});
 	}
-	
+
 	this.sync = function() {
 		var data = {
 			me: _this.me,
@@ -226,7 +228,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 	};
 
 	this.init = function(apiKey, scope) { // scope sent in to update the view
-		
+
 		Restangular.setDefaultHeaders({'Authorization': 'Basic ' + $base64.encode(apiKey + ':') });
 		Restangular.setBaseUrl('https://app.asana.com/api/1.0/');
 		getValue(storeKey, function(store) {
