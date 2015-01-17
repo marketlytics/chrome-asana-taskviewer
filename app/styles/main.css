@@ -13,6 +13,13 @@ ul {
 	list-style: none;
 }
 
+.text-selectable {
+	-moz-user-select: text;
+	-ms-user-select: text;
+	-webkit-user-select: text;
+	user-select: text;
+}
+
 select.form-control {
 	cursor: pointer;
 }
@@ -138,6 +145,13 @@ select.form-control {
 	margin: 0;
 }
 
+.item-notes {
+	font-size: 11px;
+	color: #333;
+	background: #F5F5F5;
+	padding: 5px 10px;
+}
+
 input[type="text"].form-control {
 	font-size: 13px;
 	margin-top: 15px;
@@ -191,6 +205,7 @@ small {
 .details {
 	padding: 10px 5px;
 }
+
 .stories {
 	color: rgb(10,110,189);
 	font-size: 11px;
@@ -204,8 +219,17 @@ small {
 	color: #999;
 }
 
-.comment > .story-text, .story-text a {
-	font-weight: bold;
+.comment {
+	background: aliceblue;
+	margin: 7px 0;
+	padding: 0 5px;
+}
+
+.comment > .story-text {
+	color: #333;
+}
+
+.story-text a {
 	color: rgb(10,110,189);
 }
 
