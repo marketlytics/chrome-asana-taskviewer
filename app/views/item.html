@@ -1,22 +1,22 @@
 <div class="checkbox" ng-class="{ 'task-heading': isHeading(item.name) }" ng-click="$parent.showDetails(item.id)">
-	
+
 	<input type="checkbox" name="task" value="{{item.id}}" ng-model="item.completed"  ng-change="asana.toggleTaskComplete(item.id, item.completed)" ng-show="!isHeading(item.name)"/>&nbsp;
-	
+
 	<span class="task-text"><span class="assignee" title="{{ item.assignee.name }}">{{ item.assignee.name | initials }}</span>&nbsp; <span title="{{item.name}}">{{item.name}}</span>&nbsp;</span>
 
 	<small ng-show="item.due_on" ng-class="{ 'deadline': hasDeadlinePassed(item.due_on), 'upcoming': isDeadlineUpcoming(item.due_on) }">{{item.due_on | date:'dd MMM'}}</small>
-	
+
 	<a class="pull-right" ng-show="!isHeading(item.name)"><i class="glyphicon" ng-class="{ 'glyphicon-chevron-right': !item.showDetails, 'glyphicon-chevron-down': item.showDetails}"></i></a>
 
 </div>
 <div class="details" ng-show="item.showDetails">
-	
-	<p class="lead" ng-show="item.notes != ''" ng-bind-html="item.notes"></p>
+
+	<p class="item-notes text-selectable" ng-show="item.notes != ''" ng-bind-html="item.notes | newLines"></p>
 
 	<ul class="stories">
 		<li ng-show="item.stories.length > storyLimit"><a ng-click="storyLimit = item.stories.length">Show all stories</a></li>
 		<li ng-repeat="story in item.stories" class="{{story.type}}" ng-show="(item.stories.length - $index) <= storyLimit">
-			<span title="{{ story.created_by.name }}" class="story-author">{{story.created_by.name | initials }}</span> <span class="story-text" ng-bind-html="story.text | attachment"></span> <small>{{ story.created_at | date:'dd MMM'}}</small>
+			<span title="{{ story.created_by.name }}" class="story-author">{{story.created_by.name | initials }}</span> <span class="story-text text-selectable" ng-bind-html="story.text | attachment"></span> <small>{{ story.created_at | date:'dd MMM'}}</small>
 		</li>
 	</ul>
 
@@ -40,7 +40,7 @@
 	  		<span class="glyphicon glyphicon-new-window"></span>
 	  	</a>
 	</div>
-	
+
 	<div class="input-group">
 		<input type="text" id="comment{{item.id}}" class="form-control comment" placeholder="Write a comment..." />
 	  	<div class="input-group-btn">
@@ -50,5 +50,5 @@
 	<form style="display:none;">
 		<input type="file" id="file{{item.id}}" name="file" />
 	</form>
-	
+
 </div>
