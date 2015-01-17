@@ -24,6 +24,11 @@ select.form-control {
 	cursor: pointer;
 }
 
+.comment.form-control {
+	margin-top: 13px;
+	font-size: 14px;
+}
+
 .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
 	opacity: 0.5;
 }
@@ -219,7 +224,7 @@ small {
 	color: #999;
 }
 
-.comment {
+.story.comment {
 	background: aliceblue;
 	margin: 7px 0;
 	padding: 0 5px;
