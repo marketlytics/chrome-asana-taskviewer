@@ -44,7 +44,11 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 	$scope.interval = setInterval(function() {
 		if($scope.userPrefs.autoRefresh) {
 			var date = new Date($scope.userPrefs.lastRefresh);
-			AsanaService.autoRefresh(date.toISOString(), intervalCallback);
+			var diffSinceLast = ((new Date()).getTime() - date.getTime()) / 1000;
+			if(diffSinceLast > 10000)
+				AsanaService.refresh(false);
+			else
+				AsanaService.autoRefresh(date.toISOString(), intervalCallback);
 			$scope.userPrefs.lastRefresh = (new Date()).getTime();
 			savePrefs();
 		}
