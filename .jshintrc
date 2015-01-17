@@ -24,6 +24,7 @@
         "tracker": false,
         "storeValue": false,
         "getValue": false,
+        "analytics": true,
         "$": false
     }
 }
