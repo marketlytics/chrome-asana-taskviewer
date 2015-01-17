@@ -4,7 +4,7 @@
     "esnext": true,
     "bitwise": true,
     "camelcase": true,
-    "curly": true,
+    "curly": false,
     "eqeqeq": true,
     "immed": true,
     "indent": 2,
@@ -19,6 +19,11 @@
     "trailing": true,
     "smarttabs": true,
     "globals" : {
-        "chrome": true
+        "chrome": true,
+        "angular": false,
+        "tracker": false,
+        "storeValue": false,
+        "getValue": false,
+        "$": false
     }
 }

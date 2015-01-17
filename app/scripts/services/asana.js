@@ -1,5 +1,6 @@
 angular.module('asanaChromeApp').
 service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular, $base64, notify) {
+	'use strict';
 
 	var storeKey = 'asanaStore';
 	var optFields = 'opt_fields=assignee.name,assignee,projects,assignee_status,completed,due_on,name,notes,hearted,num_hearts,followers,followers.name';
@@ -20,7 +21,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 	var _this = this;
 
 	// default error handling
-	Restangular.setErrorInterceptor(function(response, deferred, responseHandler) {
+	Restangular.setErrorInterceptor(function(response) {
 		if(_this.loading < 0) // incase of repeated failures
 			_this.loading = 0;
 		else
@@ -50,7 +51,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 	/* Getting data */
 	this.selectUser = function(userId) {
 		for(var x = 0; x < _this.team; x++) {
-			_this.team[x].isSelected = _this.team[x].id == userId;
+			_this.team[x].isSelected = _this.team[x].id === userId;
 		}
 		_this.sync();
 	};
@@ -58,7 +59,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 	this.selectWorkspace = function(workspaceId) {
 		_this.loading += 2;
 		for(var x = 0; x < _this.workspaces.length; x++) {
-			_this.workspaces[x]['isSelected'] = (workspaceId == _this.workspaces[x].id);
+			_this.workspaces[x].isSelected = (workspaceId === _this.workspaces[x].id);
 		}
 
 		Restangular.one('workspaces/' + workspaceId + '/projects').get().then(function(response) {
@@ -93,13 +94,14 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 	this.selectProject = function(projectId) {
 		var path = 'projects/' + projectId + '/tasks?' + optFields;
 		for(var x = 0; x < _this.projects.length; x++) {
-			_this.projects[x]['isSelected'] = (projectId == _this.projects[x].id);
+			_this.projects[x].isSelected = (projectId === _this.projects[x].id);
 		}
 
 		_this.loading += 1;
 
-		if(projectId == 0) // differnt route for fetching all tasks
+		if(projectId === 0) { // differnt route for fetching all tasks
 			path = 'tasks?assignee=me&workspace=' + _this.getActiveWorkspace().id + '&' + optFields;
+		}
 
 		Restangular.one(path).get().then(function(response) {
 			_this.loading -= 1;
@@ -138,7 +140,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 			return;
 		}
 
-		if(typeof task.stories !== 'undefined' && !force) return; // already fetched before.
+		if(typeof task.stories !== 'undefined' && !force) { return; }// already fetched before.
 		_this.loading += 2;
 		Restangular.one('tasks', task.id).one('stories').get().then(function(response) {
 			_this.loading -= 1;
@@ -187,7 +189,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 		var activeProject = _this.getActiveProject();
 		var path = '&project=' + activeProject.id;
 
-		if(activeProject.id == 0) { // all selected
+		if(activeProject.id === 0) { // all selected
 			var activeWorkSpace = _this.getActiveWorkspace();
 			path = '&assignee=me&workspace=' + activeWorkSpace.id;
 		}
@@ -210,10 +212,11 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 				}
 			}
 			_this.sync();
-			if(callback)
+			if(callback) {
 				callback(response.data);
+			}
 		});
-	}
+	};
 
 	this.sync = function() {
 		var data = {
@@ -249,7 +252,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 				_this.getMeData();
 			} else {
 				var asana = store[storeKey];
-				console.log("Fetched data locally:", asana);
+				console.log('Fetched data locally:', asana);
 				scope.$apply(function() {
 					_this.me = asana.me;
 					_this.team = asana.team;
@@ -266,7 +269,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 	this.toggleTaskComplete = function(taskId, completed) {
 		_this.loading += 1;
 		tracker.sendEvent('task', 'completed', completed);
-		Restangular.one('tasks', taskId).put({ completed: completed}).then(function(response) {
+		Restangular.one('tasks', taskId).put({ completed: completed}).then(function() {
 			_this.loading -= 1;
 		});
 	};
@@ -274,7 +277,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 	this.addStoryToTask = function(taskId, story) {
 		for(var x = 0; x < _this.tasks.length; x++) {
 			var task = _this.tasks[x];
-			if(task.id == taskId) {
+			if(task.id === taskId) {
 				if(typeof task.stories !== 'undefined') {
 					task.stories.push(story);
 				} else {
@@ -286,7 +289,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 
 	this.addAttachmentToTask = function(taskId, file) {
 		_this.loading += 1;
-		Restangular.one('tasks', taskId).withHttpConfig({transformRequest: angular.identity}).customPOST(file, 'attachments', undefined, {'Content-Type': undefined}).then(function(response) {
+		Restangular.one('tasks', taskId).withHttpConfig({transformRequest: angular.identity}).customPOST(file, 'attachments', undefined, {'Content-Type': undefined}).then(function() {
 			_this.loading -= 1;
 			_this.fetchTaskDetails(taskId, true);
 		});

@@ -1,4 +1,6 @@
 angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaService', '$http', 'notify', function($scope, AsanaService, $http, notify) {
+	'use strict';
+
 	$scope.asana = AsanaService;
 
 	$scope.userPrefs = {
@@ -7,9 +9,9 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 		taskFilterStatus: 'all',
 		taskFilter: {},
 		taskContext: [],
-		contextText: "",
+		contextText: '',
 		lastRefresh: (new Date()).getTime(),
-		apiKey: "",
+		apiKey: '',
 		selectedProject: 0,
 		selectedWorkspace: null,
 		autoRefresh: true,
@@ -41,7 +43,7 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 
 	$scope.interval = setInterval(function() {
 		if($scope.userPrefs.autoRefresh) {
-			var date = new Date($scope.userPrefs.lastRefresh)
+			var date = new Date($scope.userPrefs.lastRefresh);
 			AsanaService.autoRefresh(date.toISOString(), intervalCallback);
 			$scope.userPrefs.lastRefresh = (new Date()).getTime();
 			savePrefs();
@@ -55,12 +57,12 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 			// only copy the ones available (initally only apiKey is there)
 			for(var key in $scope.userPrefs) {
 				if(typeof value.userPrefs[key] !== 'undefined' && value.userPrefs[key] !== null) {
-					$scope.userPrefs[key] = value.userPrefs[key];		
+					$scope.userPrefs[key] = value.userPrefs[key];
 				}
 			}
-			
 
-			// configure the apiKey 
+
+			// configure the apiKey
 			if(typeof value.userPrefs.apiKey !== 'undefined') {
 				AsanaService.init(value.userPrefs.apiKey, $scope);
 			} else {
@@ -71,7 +73,7 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 			// configure the filters
 			if(typeof value.userPrefs.taskFilter !== 'undefined') {
 				if(typeof value.userPrefs.taskFilter.completed !== 'undefined') {
-					if(value.userPrefs.taskFilter.completed) 
+					if(value.userPrefs.taskFilter.completed)
 						$scope.userPrefs.taskFilterCompleted = 'completed';
 					else
 						$scope.userPrefs.taskFilterCompleted = 'todo';
@@ -82,18 +84,18 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 
 	//Setup your private function
 	var watchers = []; // used to watch over subtask changes esp for refresh.
-	
+
 	var setTaskWithContext = function(taskId) {
 		var task = AsanaService.findTask(taskId);
 		if($scope.userPrefs.taskContext.length <= 0 || task === null) {
 			$scope.tasks = AsanaService.tasks;
 		} else {
 			$scope.userPrefs.contextText = task.name;
-			$scope.tasks = task.subtasks;	
+			$scope.tasks = task.subtasks;
 		}
 
 		savePrefs();
-	}
+	};
 
 	var savePrefs = function() {
 		storeValue('userPrefs', $scope.userPrefs);
@@ -152,14 +154,14 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 		}
 
 		$scope.userPrefs.taskContext = [];
-		$scope.userPrefs.contextText = '';		
+		$scope.userPrefs.contextText = '';
 		setTaskWithContext(null);
 	};
 
 	$scope.refresh = function() {
 		tracker.sendEvent('app', 'refresh');
 		if($scope.userPrefs.taskContext.length > 0) {
-			AsanaService.fetchTaskDetails($scope.userPrefs.taskContext[$scope.userPrefs.taskContext.length - 1], true);	
+			AsanaService.fetchTaskDetails($scope.userPrefs.taskContext[$scope.userPrefs.taskContext.length - 1], true);
 		} else {
 			AsanaService.refresh(false);
 		}
@@ -177,12 +179,12 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 	$scope.changeProject = function(project) {
 		tracker.sendEvent('app', 'changeProject');
 		resetContext();
-		
-		if(project ==  0) {
+
+		if(project ===  0) {
 			$scope.userPrefs.taskFilterAssigned = 0;
 			$scope.adjustFilter();
 			$scope.asana.selectUser(0);
-		} 
+		}
 
 		AsanaService.selectProject(project);
 	};
@@ -190,7 +192,7 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 	$scope.saveApiKey = function() {
 		if($scope.userPrefs.apiKey !== '') {
 			tracker.sendEvent('app', 'updateAPIKey');
-			storeValue('apiKey', $scope.userPrefs.apiKey);			
+			storeValue('apiKey', $scope.userPrefs.apiKey);
 		} else {
 			notify({ message:'Please enter a valid API key.', classes: 'alert-custom' } );
 		}
@@ -199,7 +201,7 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 	$scope.showDetails = function(taskId) {
 		for(var x = 0; x < $scope.tasks.length; x++) {
 			var task = $scope.tasks[x];
-			if(task.id == taskId) {
+			if(task.id === taskId) {
 				if(task.showDetails) {
 					task.showDetails = false;
 				}
@@ -222,28 +224,29 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 	$scope.adjustFilter = function() {
 		tracker.sendEvent('app', 'adjustFilter');
 		if($scope.userPrefs.taskFilterCompleted === 'todo') {
-			$scope.userPrefs.taskFilter['completed'] = false;
+			$scope.userPrefs.taskFilter.completed = false;
 		} else if($scope.userPrefs.taskFilterCompleted === 'completed') {
-			$scope.userPrefs.taskFilter['completed'] = true;
+			$scope.userPrefs.taskFilter.completed = true;
 		} else if($scope.userPrefs.taskFilterCompleted === 'all') {
-			delete $scope.userPrefs.taskFilter['completed'];
+			delete $scope.userPrefs.taskFilter.completed;
 		}
 
+		/*jshint camelcase: false */
 		if($scope.userPrefs.taskFilterStatus === 'all') {
-			delete $scope.userPrefs.taskFilter['assignee_status'];
+			delete $scope.userPrefs.taskFilter.assignee_status;
 		} else {
-			$scope.userPrefs.taskFilter['assignee_status'] = $scope.userPrefs.taskFilterStatus;
+			$scope.userPrefs.taskFilter.assignee_status = $scope.userPrefs.taskFilterStatus;
 		}
 
-		if($scope.userPrefs.taskFilterAssigned == 0 || $scope.userPrefs.taskFilterAssigned == null) {
-			delete $scope.userPrefs.taskFilter['assignee'];
+		if($scope.userPrefs.taskFilterAssigned === 0 || $scope.userPrefs.taskFilterAssigned === null) {
+			delete $scope.userPrefs.taskFilter.assignee;
 		} else {
 			AsanaService.selectUser($scope.userPrefs.taskFilterAssigned);
-			$scope.userPrefs.taskFilter['assignee'] = $scope.userPrefs.taskFilterAssigned;
+			$scope.userPrefs.taskFilter.assignee = $scope.userPrefs.taskFilterAssigned;
 		}
-		
+
 		savePrefs();
-	}
+	};
 
 	$scope.setWindowOnTop = function() {
 		savePrefs();
