@@ -200,7 +200,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 				var actualTask = _this.findTask(updatedTask.id);
 
 				if(actualTask === null) { // Task not found, just add it in
-					if(!actualTask.parent) {
+					if(!updatedTask.parent) {
 						_this.tasks.push(updatedTask);
 					}
 				} else {
@@ -269,7 +269,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 	this.toggleTaskComplete = function(taskId, completed) {
 		_this.loading += 1;
 		tracker.sendEvent('task', 'completed', completed);
-		Restangular.one('tasks', taskId).put({ completed: completed}).then(function() {
+		Restangular.one('tasks', taskId).customPUT({ data: { completed: completed }}).then(function() {
 			_this.loading -= 1;
 		});
 	};

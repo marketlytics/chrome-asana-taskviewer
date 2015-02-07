@@ -161,8 +161,8 @@ module.exports = function (grunt) {
         dest: '<%= config.dist %>',
         flow: {
           steps: {
-            js: ['concat'], 
-            css: ['concat', 'cssmin']            
+            js: ['concat'],
+            css: ['concat', 'cssmin']
           },
           post: {}
         }
@@ -290,7 +290,7 @@ module.exports = function (grunt) {
       ],
       dist: [
         'copy:styles',
-        'imagemin',
+        //'imagemin',
         'svgmin'
       ],
       test: [
@@ -337,13 +337,13 @@ module.exports = function (grunt) {
   grunt.registerTask('debug', function (platform) {
     var watch = grunt.config('watch');
     platform = platform || 'chrome';
-    
+
 
     // Configure style task for debug:server task
     if (platform === 'server') {
       watch.styles.tasks = ['newer:copy:styles'];
       watch.styles.options.livereload = false;
-      
+
     }
 
     // Configure updated watch task

@@ -16,7 +16,7 @@
 	<ul class="stories">
 		<li ng-show="item.stories.length > storyLimit"><a ng-click="storyLimit = item.stories.length">Show all stories</a></li>
 		<li ng-repeat="story in item.stories" class="{{story.type}} story" ng-show="(item.stories.length - $index) <= storyLimit">
-			<span title="{{ story.created_by.name }}" class="story-author">{{story.created_by.name | initials }}</span> <span class="story-text text-selectable" ng-bind-html="story.text | attachment"></span> <small>{{ story.created_at | date:'dd MMM'}}</small>
+			<span title="{{ story.created_by.name }}" class="story-author">{{story.created_by.name | initials }}</span> <span class="story-text text-selectable" ng-bind-html="story.text | attachment | newLines"></span> <small>{{ story.created_at | date:'dd MMM'}}</small>
 		</li>
 	</ul>
 

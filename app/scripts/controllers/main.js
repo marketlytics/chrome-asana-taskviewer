@@ -242,7 +242,7 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 			$scope.userPrefs.taskFilter.assignee_status = $scope.userPrefs.taskFilterStatus;
 		}
 
-		if($scope.userPrefs.taskFilterAssigned === 0 || $scope.userPrefs.taskFilterAssigned === null) {
+		if(parseInt($scope.userPrefs.taskFilterAssigned) === 0 || $scope.userPrefs.taskFilterAssigned === null) {
 			delete $scope.userPrefs.taskFilter.assignee;
 		} else {
 			AsanaService.selectUser($scope.userPrefs.taskFilterAssigned);
