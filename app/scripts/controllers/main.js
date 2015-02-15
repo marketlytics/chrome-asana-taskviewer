@@ -8,6 +8,8 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 		taskFilterAssigned: 0,
 		taskFilterStatus: 'all',
 		taskFilter: {},
+		sortBy: '',
+		sortReverse: false,
 		taskContext: [],
 		contextText: '',
 		lastRefresh: (new Date()).getTime(),

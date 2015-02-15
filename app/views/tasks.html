@@ -1,7 +1,7 @@
 <ul id="tasks" ng-show="tasks.length > 0">
-    <li ng-repeat="item in tasks | filter:userPrefs.taskFilter as filteredTasks track by item.id" id="item{{item.id}}" ng-class="{ 'show-detail': item.showDetails }">
+    <li ng-repeat="item in tasks | filter:userPrefs.taskFilter | orderBy:userPrefs.sortBy:userPrefs.sortReverse as filteredTasks track by item.id" id="item{{item.id}}" ng-class="{ 'show-detail': item.showDetails }">
         <div data-item="item" data-workspace="userPrefs.selectedWorkspace"></div>
     </li>
 </ul>
 <p ng-show="tasks.length <= 0">No tasks in selected project. Change workspace or project using the settings tab.</p>
-<p ng-show="tasks.length > 0 && filteredTasks.length <= 0">No tasks match the current filters.</p>	
+<p ng-show="tasks.length > 0 && filteredTasks.length <= 0">No tasks match the current filters.</p>

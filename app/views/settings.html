@@ -28,6 +28,26 @@
     </div>
 
     <div class="row">
+      <div class="col-md-12">
+        <label>Sort By:</label>
+        <select ng-model="userPrefs.sortBy" class="form-control">
+          <option value="">No Sorting</option>
+          <option value="assignee">Assignee</option>
+          <option value="assignee_status">Assignee Status</option>
+          <option value="created_at">Created At</option>
+          <option value="completed">Completed</option>
+          <option value="due_on">Due On</option>
+          <option value="modified_at">Modified At</option>
+        </select>
+
+        <label style="margin-bottom: 0">
+          <input type="checkbox" ng-model="userPrefs.sortReverse"> Reverse?
+        </label>
+
+      </div>
+    </div>
+
+    <div class="row">
         <div class="col-md-12">
             <label>Filter status:</label>
             <select ng-model="userPrefs.taskFilterStatus" ng-change="adjustFilter()" class="form-control">
@@ -47,7 +67,7 @@
                 <option ng-repeat="user in asana.team" ng-selected="user.isSelected" value="{{user.id}}">
                     {{user.name}}
                 </option>
-                
+
             </select>
         </div>
     </div>
