@@ -24,6 +24,94 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 	$scope.tasks = [];
 	$scope.intervalTime = 1000 * 60 * 5; // 5 minutes
 
+	$scope.completedFilters = [
+		{
+			value: 'all',
+			text: 'All Completed and Incomplete tasks'
+		},
+		{
+			value: 'todo',
+			text: 'Tasks to do'
+		},
+		{
+			value: 'completed',
+			text: 'Completed tasks'
+		}
+	];
+	// configure keyboard listener
+	chrome.commands.onCommand.addListener(function(command) {
+
+		if(command === 'cycle_completed') {
+			for(var m = 0; m < $scope.completedFilters.length; m++) {
+				var filter = $scope.completedFilters[m];
+				// console.log('current', filter);
+				var nextIndex = 0;
+				if($scope.userPrefs.taskFilterCompleted === filter.value) {
+					if(m !== ($scope.completedFilters.length - 1)) {
+						nextIndex = m + 1;
+					}
+					var nextFilter = $scope.completedFilters[nextIndex];
+					$scope.userPrefs.taskFilterCompleted = nextFilter.value;
+					$scope.adjustFilter();
+					notify({ message:'Showing ' + nextFilter.text, classes: 'alert-info' } );
+					break;
+				}
+
+			}
+		}
+
+		if(command === 'cycle_projects_down' || command === 'cycle_projects_up') {
+			var inverse = 1;
+			if(command === 'cycle_projects_up') {
+				inverse = -1;
+			}
+
+			for(var x = 0; x < AsanaService.projects.length; x++) {
+				var project = AsanaService.projects[x];
+				if(project.id == $scope.userPrefs.selectedProject) {
+					var nextProjectIndex = x + (1 * inverse);
+
+					if(nextProjectIndex === AsanaService.projects.length) {
+						nextProjectIndex = 0;
+					} else if(nextProjectIndex < 0) {
+						nextProjectIndex = AsanaService.projects.length - 1;
+					}
+					var nextProject = AsanaService.projects[nextProjectIndex];
+					$scope.changeProject(nextProject.id);
+					$scope.userPrefs.selectedProject = nextProject.id;
+					notify({ message:'Switched to project ' + nextProject.name, classes: 'alert-info' } );
+					break;
+				}
+			}
+		}
+
+		if(command === 'cycle_workspaces_down' || command === 'cycle_workspaces_up') {
+			var inverse = 1;
+			if(command === 'cycle_workspaces_up') {
+				inverse = -1;
+			}
+
+			for(var y = 0; y < AsanaService.workspaces.length; y++) {
+				var workspace = AsanaService.workspaces[y];
+				if(workspace.id == $scope.userPrefs.selectedWorkspace) {
+					var nextWorkspaceIndex = y + (1 * inverse);
+
+					if(nextWorkspaceIndex === AsanaService.workspaces.length) {
+						nextWorkspaceIndex = 0;
+					} else if(nextWorkspaceIndex < 0) {
+						nextWorkspaceIndex = AsanaService.workspaces.length - 1;
+					}
+					var nextWorkspace = AsanaService.workspaces[nextWorkspaceIndex];
+					$scope.changeWorkspace(nextWorkspace.id);
+					$scope.userPrefs.selectedWorkspace = nextWorkspace.id;
+					notify({ message:'Switched to workspace ' + nextWorkspace.name, classes: 'alert-info' } );
+					break;
+				}
+			}
+		}
+
+	});
+
 	var intervalCallback = function(data) {
 		if(data.length > 0) {
 			var items = [];

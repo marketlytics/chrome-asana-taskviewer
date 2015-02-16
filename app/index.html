@@ -46,7 +46,29 @@
                 </div>
 
             </div>
-            <div class="footer">v<span id="version">1</span> 2015 <a href="http://marketlytics.com/?utm_source=asanaviewer&utm_medium=app&utm_content=footer&utm_campaign=asana" target="_blank">@marketlytics</a> - use  &#8984; +  &#8679; + 5 to toggle the app</div>
+
+            <div class="modal fade" id="keyBoardShortcuts" tabindex="-1" role="dialog" aria-labelledby="keyBoardShortcuts" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <p><strong>Keyboard Shortcuts</strong></p>
+                    <p>You can configure shortcuts below by accessing <strong>chrome://extensions/configureCommands</strong></p>
+
+                    <p>&#8984; +  &#8679; + 5 <br /> Toggle the app (available globally)</p>
+                    <p>Cycle through projects up</p>
+                    <p>Cycle through projects down</p>
+                    <p>Cycle through workspaces down</p>
+                    <p>Cycle through workspaces up</p>
+                    <p>Cycle through completed property</p>
+
+                  </div>
+                </div><!-- /.modal-content -->
+              </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+
+
+            <div class="footer">v<span id="version">1</span> 2015 <a href="http://marketlytics.com/?utm_source=asanaviewer&utm_medium=app&utm_content=footer&utm_campaign=asana" target="_blank">@marketlytics</a> - <a href="#" data-toggle="modal" data-target="#keyBoardShortcuts"><i class="glyphicon glyphicon-fire"></i></a></div>
         </div>
 
         <!-- incase of weird js errors replace lodash.compact with loadash.min -->

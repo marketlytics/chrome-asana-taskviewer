@@ -19,6 +19,30 @@
             },
             "description": "Toggle window",
             "global": true
+        },
+        "cycle_projects_up": {
+          "description": "Cycle up through projects"
+        },
+        "cycle_projects_down": {
+          "suggested_key": {
+            "default": "Ctrl+Right"
+          },
+          "description": "Cycle down through projects"
+        },
+        "cycle_workspaces_up": {
+          "description": "Cycle up through workspaces"
+        },
+        "cycle_workspaces_down": {
+          "suggested_key": {
+            "default": "Ctrl+Down"
+          },
+          "description": "Cycle down through workspaces"
+        },
+        "cycle_completed": {
+          "suggested_key": {
+            "default": "Alt+D"
+          },
+          "description": "Cycle through completed property"
         }
     },
     "icons": {

@@ -40,6 +40,14 @@ select.form-control {
 	font-size: 12px;
 }
 
+.alert-info {
+	padding: 7px 30px;
+	color: #333;
+	background-color: #93D4D6;
+	font-size: 12px;
+}
+
+
 .footer {
 	position: fixed;
 	bottom: 0;

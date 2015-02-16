@@ -1,7 +1,7 @@
 <div class="row">
         <div class="col-md-12">
             <label>Select Workspace:</label>
-            <select id="workspace" class="form-control" ng-model="userPrefs.selectedWorkspace" ng-change="changeWorkspace(userPrefs.selectedWorkspace)">
+            <select id="workspaces" class="form-control" ng-model="userPrefs.selectedWorkspace" ng-change="changeWorkspace(userPrefs.selectedWorkspace)">
                 <option ng-repeat="workspace in asana.workspaces" ng-selected="workspace.isSelected" value="{{workspace.id}}">{{workspace.name}}</option>
             </select>
         </div>
@@ -10,7 +10,7 @@
     <div class="row">
         <div class="col-md-12">
             <label>Select Project:</label>
-            <select id="workspace" class="form-control" ng-model="userPrefs.selectedProject" ng-change="changeProject(userPrefs.selectedProject)">
+            <select id="projects" class="form-control" ng-model="userPrefs.selectedProject" ng-change="changeProject(userPrefs.selectedProject)">
                 <option ng-repeat="project in asana.projects" ng-selected="project.isSelected" value="{{project.id}}">{{project.name}}</option>
             </select>
         </div>
@@ -20,9 +20,7 @@
         <div class="col-md-12">
             <label>Show:</label>
             <select ng-model="userPrefs.taskFilterCompleted" ng-change="adjustFilter()" class="form-control">
-                <option value="all">All Completed and Incomplete Tasks</option>
-                <option value="todo">Tasks to do </option>
-                <option value="completed">Completed Tasks</option>
+                <option ng-repeat="completed in completedFilters" value="{{completed.value}}">{{ completed.text }}</option>
             </select>
         </div>
     </div>
