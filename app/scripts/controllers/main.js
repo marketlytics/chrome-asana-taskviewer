@@ -40,7 +40,7 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 	];
 	// configure keyboard listener
 	chrome.commands.onCommand.addListener(function(command) {
-
+		$('.alert-info').hide();
 		if(command === 'cycle_completed') {
 			for(var m = 0; m < $scope.completedFilters.length; m++) {
 				var filter = $scope.completedFilters[m];
