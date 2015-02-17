@@ -99,7 +99,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 
 		_this.loading += 1;
 
-		if(projectId === 0) { // differnt route for fetching all tasks
+		if(parseInt(projectId) === 0) { // differnt route for fetching all tasks
 			path = 'tasks?assignee=me&workspace=' + _this.getActiveWorkspace().id + '&' + optFields;
 		}
 
