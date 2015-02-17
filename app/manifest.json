@@ -1,7 +1,7 @@
 {
     "name": "Asana Task Viewer",
     "description": "This chrome app allows you to view (offline) and manage your tasks from your desktop.",
-    "version": "17",
+    "version": "18",
     "manifest_version": 2,
     "default_locale": "en",
     "permissions": [
@@ -21,28 +21,28 @@
             "global": true
         },
         "cycle_projects_up": {
-          "description": "Cycle up through projects"
+            "description": "Cycle up through projects"
         },
         "cycle_projects_down": {
-          "suggested_key": {
-            "default": "Ctrl+Right"
-          },
-          "description": "Cycle down through projects"
+            "suggested_key": {
+                "default": "Ctrl+Right"
+            },
+            "description": "Cycle down through projects"
         },
         "cycle_workspaces_up": {
-          "description": "Cycle up through workspaces"
+            "description": "Cycle up through workspaces"
         },
         "cycle_workspaces_down": {
-          "suggested_key": {
-            "default": "Ctrl+Down"
-          },
-          "description": "Cycle down through workspaces"
+            "suggested_key": {
+                "default": "Ctrl+Down"
+            },
+            "description": "Cycle down through workspaces"
         },
         "cycle_completed": {
-          "suggested_key": {
-            "default": "Alt+D"
-          },
-          "description": "Cycle through completed property"
+            "suggested_key": {
+                "default": "Alt+D"
+            },
+            "description": "Cycle through completed property"
         }
     },
     "icons": {
