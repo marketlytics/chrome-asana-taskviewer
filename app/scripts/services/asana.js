@@ -62,9 +62,16 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 			_this.workspaces[x].isSelected = (workspaceId === _this.workspaces[x].id);
 		}
 
-		Restangular.one('workspaces/' + workspaceId + '/projects').get().then(function(response) {
+		Restangular.one('workspaces/' + workspaceId + '/projects?opt_fields=archived,name,color,workspace').get().then(function(response) {
 			_this.loading -= 1;
-			_this.projects = response.data;
+			var activeProjects = [];
+			for(var x = 0; x < response.data.length; x++) {
+				var project = response.data[x];
+				if(!project.archived) { // filter out archived projects
+					activeProjects.push(project);
+				}
+			}
+			_this.projects = activeProjects;
 			_this.projects.unshift({
 				id: 0,
 				name: 'All (assigned to me)',
