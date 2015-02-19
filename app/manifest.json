@@ -1,7 +1,7 @@
 {
     "name": "Asana Task Viewer",
     "description": "This chrome app allows you to view (offline) and manage your tasks from your desktop.",
-    "version": "18",
+    "version": "19",
     "manifest_version": 2,
     "default_locale": "en",
     "permissions": [
