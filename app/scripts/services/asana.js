@@ -50,8 +50,8 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 
 	/* Getting data */
 	this.selectUser = function(userId) {
-		for(var x = 0; x < _this.team; x++) {
-			_this.team[x].isSelected = _this.team[x].id === userId;
+		for(var x = 0; x < _this.team.length; x++) {
+			_this.team[x].isSelected = (parseInt(_this.team[x].id) === parseInt(userId));
 		}
 		_this.sync();
 	};
@@ -59,7 +59,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 	this.selectWorkspace = function(workspaceId) {
 		_this.loading += 2;
 		for(var x = 0; x < _this.workspaces.length; x++) {
-			_this.workspaces[x].isSelected = (workspaceId === _this.workspaces[x].id);
+			_this.workspaces[x].isSelected = (parseInt(workspaceId) === _this.workspaces[x].id);
 		}
 
 		Restangular.one('workspaces/' + workspaceId + '/projects?opt_fields=archived,name,color,workspace').get().then(function(response) {
@@ -77,7 +77,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 				name: 'All (assigned to me)',
 			});
 
-			_this.selectProject(response.data[0].id);
+			_this.selectProject(0);
 		});
 
 		Restangular.one('workspaces', workspaceId).one('users').get().then(function(response) {
@@ -101,7 +101,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 	this.selectProject = function(projectId) {
 		var path = 'projects/' + projectId + '/tasks?' + optFields;
 		for(var x = 0; x < _this.projects.length; x++) {
-			_this.projects[x].isSelected = (projectId === _this.projects[x].id);
+			_this.projects[x].isSelected = (parseInt(projectId) === _this.projects[x].id);
 		}
 
 		_this.loading += 1;
@@ -112,6 +112,14 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 
 		Restangular.one(path).get().then(function(response) {
 			_this.loading -= 1;
+			for(var m = 0; m < response.data.length; m++) {
+				if(response.data[m].assignee === null) {
+					response.data[m].assignee = {
+						id: '',
+						name: ''
+					};
+				}
+			}
 			_this.tasks = response.data;
 			_this.sync(); // done at the end (when tasks are fetched and on each item)
 		});

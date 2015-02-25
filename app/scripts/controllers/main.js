@@ -274,7 +274,7 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 		tracker.sendEvent('app', 'changeProject');
 		resetContext();
 
-		if(project ===  0) {
+		if(parseInt(project) ===  0) {
 			$scope.userPrefs.taskFilterAssigned = 0;
 			$scope.adjustFilter();
 			$scope.asana.selectUser(0);
@@ -336,9 +336,10 @@ angular.module('asanaChromeApp').controller('MainController', ['$scope','AsanaSe
 			delete $scope.userPrefs.taskFilter.assignee;
 		} else {
 			AsanaService.selectUser($scope.userPrefs.taskFilterAssigned);
-			$scope.userPrefs.taskFilter.assignee = $scope.userPrefs.taskFilterAssigned;
+			$scope.userPrefs.taskFilter.assignee = { id: $scope.userPrefs.taskFilterAssigned };
 		}
 
+		console.log($scope.userPrefs.taskFilter);
 		savePrefs();
 	};
 
