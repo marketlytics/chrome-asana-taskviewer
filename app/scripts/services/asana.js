@@ -112,6 +112,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 
 		Restangular.one(path).get().then(function(response) {
 			_this.loading -= 1;
+			// loop below is to add blank string
 			for(var m = 0; m < response.data.length; m++) {
 				if(response.data[m].assignee === null) {
 					response.data[m].assignee = {
