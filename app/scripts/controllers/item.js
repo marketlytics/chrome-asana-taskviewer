@@ -1,5 +1,7 @@
 angular.module('asanaChromeApp').
 controller('ItemController', ['$scope', 'AsanaService', function($scope, AsanaService) {
+	'use strict';
+
 	$scope.showDetails = false;
 	$scope.asana = AsanaService;
 	$scope.storyLimit = 3;
@@ -25,18 +27,18 @@ controller('ItemController', ['$scope', 'AsanaService', function($scope, AsanaSe
 	}
 
 	$scope.expandTasks = function(taskId) {
-		
+
 		$scope.$parent.expandContext(taskId);
 	}
 
 	// TODO: Extend as date object
 	var convertStringToDate = function(dateString) {
-		if(!dateString) 
+		if(!dateString)
 			return false;
 
 		//2014-11-17
 		var dateComps = dateString.split('-');
-		if(dateComps.length !== 3) 
+		if(dateComps.length !== 3)
 			return false;
 
 		//new Date(year, month, day, hours, minutes, seconds, milliseconds);
@@ -60,7 +62,7 @@ controller('ItemController', ['$scope', 'AsanaService', function($scope, AsanaSe
 		return (diff > 0 && diff < 86400000) || (diff < 0 && diff > -86399999);
 	}
 
-	
+
 	$scope.isHeading = function(heading) {
 		return heading.match(/:$/g) !== null;
 	};

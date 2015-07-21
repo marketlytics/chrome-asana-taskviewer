@@ -1,0 +1,82 @@
+<div class="row">
+    <div class="col-md-12">
+        <label>Select Project (under {{ asana.getActiveWorkspace().name }}):</label>
+        <select id="projects" class="form-control" ng-model="adding.project" ng-change="selectProject()">
+            <option ng-repeat="project in asana.projects" ng-selected="project.isSelected" value="{{project.id}}">{{project.name}}</option>
+        </select>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <label>Title:</label>
+        <input type="text" class="form-control" ng-model="adding.title" id="addTaskTitle" ng-enter="addTask()" />
+        <small>To quick add task (&#8984; +  &#8679; + 6), just enter title and press enter</small>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <label>Description:</label>
+        <textarea ng-model="adding.description" class="form-control"></textarea>
+        <small>Only plain-text</small>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <label>Assigned to:</label>
+        <select ng-model="adding.assigned" class="form-control" ng-enter="addTask()">
+            <option ng-repeat="user in asana.team" ng-selected="user.isSelected" value="{{user.id}}"> {{user.name}} </option>
+        </select>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <label>Due date:</label>
+        <input type="date" ng-model="adding.dueDate" class="form-control">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <label>Due time:</label>
+        <select ng-model="adding.dueTime" class="form-control">
+            <option value="none">None</option>
+            <option value="0">00:00</option>
+            <option value="1">01:00</option>
+            <option value="2">02:00</option>
+            <option value="3">03:00</option>
+            <option value="4">04:00</option>
+            <option value="5">05:00</option>
+            <option value="6">06:00</option>
+            <option value="7">07:00</option>
+            <option value="8">08:00</option>
+            <option value="9">09:00</option>
+            <option value="10">10:00</option>
+            <option value="11">11:00</option>
+            <option value="12">12:00</option>
+            <option value="13">13:00</option>
+            <option value="14">14:00</option>
+            <option value="15">15:00</option>
+            <option value="16">16:00</option>
+            <option value="17">17:00</option>
+            <option value="18">18:00</option>
+            <option value="19">19:00</option>
+            <option value="20">20:00</option>
+            <option value="21">21:00</option>
+            <option value="22">22:00</option>
+            <option value="23">23:00</option>
+            <option value="24">24:00</option>
+        </select>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <br />
+        <a href="#" class="btn btn-block btn-success" ng-click="addTask()"><span class="glyphicon glyphicon-plus"></span> ADD TO ASANA</a>
+    </div>
+</div>

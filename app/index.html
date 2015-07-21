@@ -26,6 +26,7 @@
                 <li role="presentation" ng-show="userPrefs.taskContext.length > 0"><a href="#" ng-click="reduceContext()" title="{{userPrefs.contextText}}"><i class="glyphicon glyphicon-chevron-left"></i>&nbsp; {{userPrefs.contextText | limitTo:6 }}...</a></li>
                 <li role="presentation" class="active"><a href="#tasks-tab" aria-controls="tasks-tab" role="tab" data-toggle="tab">Tasks</a></li>
                 <li role="presentation"><a href="#settings-tab" aria-controls="settings-tab" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-cog"></i></a></li>
+                <li role="presentation"><a href="#add-tab" aria-controls="add-tab" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-plus"></i></a></li>
                 <li role="presentation"><a href="#feedback-tab" aria-controls="feedback-tab" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-question-sign"></i></a></li>
                 <li role="presentation"><a href="#" ng-click="refresh()"><i class="glyphicon glyphicon-refresh"></i></a></li>
                 <li role="presentation" ng-show="asana.loading > 0"><div class="loading"></div></li>
@@ -33,13 +34,17 @@
 
               <!-- Tab panes -->
               <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active" id="tasks-tab">
+                <div role="tabpanel" class="tab-pane" id="tasks-tab">
                     <div ng-include="'views/tasks.html'"></div>
                 </div>
 
                 <div role="tabpanel" class="tab-pane" id="settings-tab">
                     <div ng-include="'views/settings.html'"></div>
-                 </div>
+                </div>
+
+                <div role="tabpanel" class="tab-pane active" id="add-tab">
+                     <div ng-include="'views/add.html'" ng-controller="AddController"></div>
+                </div>
 
                 <div role="tabpanel" class="tab-pane" id="feedback-tab">
                     <div ng-include="'views/feedback.html'"></div>
@@ -87,6 +92,7 @@
         <script src="bower_components/restangular/dist/restangular.js"></script>
         <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
         <script src="bower_components/angular-base64/angular-base64.js"></script>
+        <script src="bower_components/angular-base64/angular-base64.min.js"></script>
         <script src="bower_components/chrome-platform-analytics/google-analytics-bundle.js"></script>
         <script src="bower_components/angular-notify/dist/angular-notify.js"></script>
         <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
@@ -98,7 +104,9 @@
         <script src="scripts/index.js"></script>
         <script src="scripts/controllers/main.js"></script>
         <script src="scripts/controllers/item.js"></script>
+        <script src="scripts/controllers/add.js"></script>
         <script src="scripts/directives/item.js"></script>
+        <script src="scripts/directives/enter.js"></script>
         <script src="scripts/directives/tooltip.js"></script>
         <script src="scripts/services/asana.js"></script>
         <script src="scripts/filters/initials.js"></script>

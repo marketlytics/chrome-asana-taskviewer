@@ -21,7 +21,7 @@ var createAppWindow = function(userPrefs) {
           singleton: true,
           outerBounds: {
               width: 420,
-              height: 460,
+              height: 600,
               left: Math.round((screen.availWidth - 420) / 2),
               top: Math.round((screen.availHeight - 460)/2),
               minWidth: 420,
@@ -29,7 +29,7 @@ var createAppWindow = function(userPrefs) {
           }
       });
     }, 1000);
-}
+};
 
 chrome.commands.onCommand.addListener(function(command) {
 
@@ -40,6 +40,13 @@ chrome.commands.onCommand.addListener(function(command) {
         } else {
             chrome.app.window.get('main').hide();
             isHidden = true;
+        }
+    }
+
+    if(command === 'add_task') {
+        if(isHidden) {
+            chrome.app.window.get('main').show();
+            isHidden = false;
         }
     }
 });

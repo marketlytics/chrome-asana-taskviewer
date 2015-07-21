@@ -56,6 +56,32 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 		_this.sync();
 	};
 
+	this.addTask = function(projectId, name, notes, assignee, dueDate) {
+		_this.loading += 1;
+		var currentWorkspace = this.getActiveWorkspace();
+		var data = {
+			assignee: assignee,
+			name: name,
+			due_at: dueDate,
+			notes: notes,
+			workspace: currentWorkspace.id,
+			projects: projectId
+		};
+
+		if(!projectId) delete data.projects;
+		if(projectId[0] === 0) {
+			data.assignee = _this.me.id;
+			delete data.projects;
+		}
+
+		return Restangular.one('tasks').post('',{
+			data: data
+		}).then(function() {
+			_this.loading -= 1;
+			// add to the project as well
+		});
+	}
+
 	this.selectWorkspace = function(workspaceId) {
 		_this.loading += 2;
 		for(var x = 0; x < _this.workspaces.length; x++) {
@@ -85,7 +111,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 			var users = [];
 			users.push({
 				id: '0',
-				name: 'Show all',
+				name: 'None',
 				isSelected: true
 			});
 
