@@ -16,6 +16,7 @@ controller('AddController', ['$scope', 'AsanaService', 'notify', function($scope
 
     // the object sent to the server to add.
     $scope.adding = {
+		project: 0,
 		title: '',
 		description: '',
 		dueDate: '',
@@ -30,7 +31,11 @@ controller('AddController', ['$scope', 'AsanaService', 'notify', function($scope
 
 	$scope.addTask = function() {
 		var objectToAdd = angular.copy($scope.adding);
-		objectToAdd.project = [ $scope.asana.getActiveProject().id ];
+		if(!objectToAdd.project) {
+			objectToAdd.project = [ $scope.asana.getActiveProject().id ];
+		} else {
+			objectToAdd.project = [ objectToAdd.project ];	
+		}
 
 		var dueDate = null;
 		if(objectToAdd.dueDate) {

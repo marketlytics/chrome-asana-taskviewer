@@ -80,7 +80,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 			_this.loading -= 1;
 			// add to the project as well
 		});
-	}
+	};
 
 	this.selectWorkspace = function(workspaceId) {
 		_this.loading += 2;
@@ -88,7 +88,7 @@ service('AsanaService', ['Restangular','$base64', 'notify', function(Restangular
 			_this.workspaces[x].isSelected = (parseInt(workspaceId) === _this.workspaces[x].id);
 		}
 
-		Restangular.one('workspaces/' + workspaceId + '/projects?opt_fields=archived,name,color,workspace').get().then(function(response) {
+		Restangular.one('workspaces/' + workspaceId + '/projects?opt_fields=archived,name,color,workspace,team,team.name').get().then(function(response) {
 			_this.loading -= 1;
 			var activeProjects = [];
 			for(var x = 0; x < response.data.length; x++) {
