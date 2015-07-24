@@ -11,7 +11,7 @@
         <div class="col-md-12">
             <label>Select Project:</label>
             <select id="projects" class="form-control" ng-model="userPrefs.selectedProject" ng-change="changeProject(userPrefs.selectedProject)">
-                <option ng-repeat="project in asana.projects" ng-selected="project.isSelected" value="{{project.id}}">{{project.name}}</option>
+                <option ng-repeat="project in asana.projects" ng-selected="project.isSelected" value="{{project.id}}">{{project | nameWithTeam}}</option>
             </select>
         </div>
     </div>

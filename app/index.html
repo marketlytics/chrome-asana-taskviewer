@@ -34,7 +34,7 @@
 
               <!-- Tab panes -->
               <div class="tab-content">
-                <div role="tabpanel" class="tab-pane" id="tasks-tab">
+                <div role="tabpanel" class="tab-pane active" id="tasks-tab">
                     <div ng-include="'views/tasks.html'"></div>
                 </div>
 
@@ -42,7 +42,7 @@
                     <div ng-include="'views/settings.html'"></div>
                 </div>
 
-                <div role="tabpanel" class="tab-pane active" id="add-tab">
+                <div role="tabpanel" class="tab-pane" id="add-tab">
                      <div ng-include="'views/add.html'" ng-controller="AddController"></div>
                 </div>
 
@@ -111,6 +111,7 @@
         <script src="scripts/services/asana.js"></script>
         <script src="scripts/filters/initials.js"></script>
         <script src="scripts/filters/newLines.js"></script>
+        <script src="scripts/filters/nameWithTeam.js"></script>
         <script src="scripts/filters/attachment.js"></script>
         <script src="scripts/filters/appendNames.js"></script>
         <!-- endbuild -->
