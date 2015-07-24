@@ -16,7 +16,7 @@
 	<ul class="stories">
 		<li ng-show="item.stories.length > storyLimit"><a ng-click="storyLimit = item.stories.length">Show all stories</a></li>
 		<li ng-repeat="story in item.stories" class="{{story.type}} story" ng-show="(item.stories.length - $index) <= storyLimit">
-			<span title="{{ story.created_by.name }}" class="story-author">{{story.created_by.name | initials }}</span> <span class="story-text text-selectable" ng-bind-html="story.text | attachment | newLines"></span> <small>{{ story.created_at | date:'dd MMM'}}</small>
+			<span class="story-author">{{ story.created_by.name }}:</span> <span class="story-text text-selectable" ng-bind-html="story.text | attachment | newLines"></span> <small>{{ story.created_at | date:'dd MMM'}}</small>
 		</li>
 	</ul>
 
@@ -42,7 +42,7 @@
 	</div>
 
 	<div class="input-group">
-		<input type="text" id="comment{{item.id}}" class="form-control comment comments-field" placeholder="Write a comment..." />
+		<input type="text" id="comment{{item.id}}" class="form-control comment comments-field" placeholder="Write a comment..." ng-enter="addStory(item.id)" />
 	  	<div class="input-group-btn">
 	    	<button class="btn btn-sm btn-info" ng-click="addStory(item.id)"><i class="glyphicon glyphicon-send"></i></button>
 	 	</div>
