@@ -32,7 +32,10 @@ controller('ItemController', ['$scope', 'AsanaService', function($scope, AsanaSe
 	}
 
 	// TODO: Extend as date object
-	var convertStringToDate = function(dateString) {
+	var convertStringToDate = function(dateString, timeString) {
+		if(timeString)
+			return new Date(timeString);
+
 		if(!dateString)
 			return false;
 
@@ -45,16 +48,16 @@ controller('ItemController', ['$scope', 'AsanaService', function($scope, AsanaSe
 		return new Date(dateComps[0], parseInt(dateComps[1]) - 1, dateComps[2], 0, 0, 0, 0, 0);
 	};
 
-	$scope.hasDeadlinePassed = function(deadline) {
-		var date = convertStringToDate(deadline);
+	$scope.hasDeadlinePassed = function(dueOn, dueAt) {
+		var date = convertStringToDate(dueOn, dueAt);
 		if(!date)
 			return false;
 
 		return date.getTime() < (new Date()).getTime();
 	};
 
-	$scope.isDeadlineUpcoming = function(deadline) {
-		var date = convertStringToDate(deadline);
+	$scope.isDeadlineUpcoming = function(dueOn, dueAt) {
+		var date = convertStringToDate(dueOn, dueAt);
 		if(!date)
 			return false;
 

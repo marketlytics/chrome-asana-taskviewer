@@ -139,7 +139,7 @@ select.form-control {
 }
 
 .task-text {
-	width: 76%;
+	width: 72%;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
