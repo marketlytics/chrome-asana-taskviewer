@@ -3,6 +3,7 @@
 */
 angular.module('asanaChromeApp').
 filter('appendNames', function() {
+  'use strict';
   return function(prestring, items) {
     if(items.length <= 0)
       return 'Noone.. :(';

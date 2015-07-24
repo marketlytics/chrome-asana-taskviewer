@@ -30,9 +30,9 @@
 	  	<button type="button" class="btn" data-tooltip="{{'Followed by: ' | appendNames:item.followers }}">
 	  		<span class="glyphicon glyphicon-user"></span>
 	  	</button>
-	  	<!-- <button type="button" class="btn">
+	  	<button type="button" class="btn" ng-if="item.tags.length > 0" data-tooltip="{{'Tags: ' | appendNames:item.tags }}">
 	  		<span class="glyphicon glyphicon-tags"></span>
-	  	</button> Can be added in future -->
+	  	</button>
 	  	<button type="button" class="btn click" ng-click="selectFile(item.id)" data-tooltip="Upload file">
 	  		<span class="glyphicon glyphicon-paperclip"></span>
 	  	</button>
