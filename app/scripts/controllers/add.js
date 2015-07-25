@@ -2,18 +2,6 @@ angular.module('asanaChromeApp').
 controller('AddController', ['$scope', 'AsanaService', 'notify', function($scope, AsanaService, notify) {
 	'use strict';
 
-	/**
-	TODO
-	D Implement Due Date
-	D Fix assignee
-	D Remove Workspace selection
-	X Date picker
-	D Shortcut to add task
-	- Add new task locally
-	- Add as subtask
-	- Add subtask of subtask
-	*/
-
     // the object sent to the server to add.
     $scope.adding = {
 		project: 0,
@@ -34,7 +22,7 @@ controller('AddController', ['$scope', 'AsanaService', 'notify', function($scope
 		if(!objectToAdd.project) {
 			objectToAdd.project = [ $scope.asana.getActiveProject().id ];
 		} else {
-			objectToAdd.project = [ objectToAdd.project ];	
+			objectToAdd.project = [ objectToAdd.project ];
 		}
 
 		var dueDate = null;

@@ -1,9 +1,12 @@
 <div class="row">
     <div class="col-md-12">
         <label>Select Project (under {{ asana.getActiveWorkspace().name }}):</label>
-        <select id="projects" class="form-control" ng-model="adding.project" ng-change="selectProject()">
-            <option ng-repeat="project in asana.projects" ng-selected="project.isSelected" value="{{project.id}}">{{project | nameWithTeam}}</option>
-        </select>
+        <select
+            id="projects"
+            class="form-control"
+            ng-model="adding.project"
+            ng-init="adding.project = userPrefs.selectedProject"
+            ng-options="project.id as project.name group by project.team.name for project in asana.projects"></select>
     </div>
 </div>
 

@@ -2,7 +2,10 @@
         <div class="col-md-12">
             <label>Select Workspace:</label>
             <select id="workspaces" class="form-control" ng-model="userPrefs.selectedWorkspace" ng-change="changeWorkspace(userPrefs.selectedWorkspace)">
-                <option ng-repeat="workspace in asana.workspaces" ng-selected="workspace.isSelected" value="{{workspace.id}}">{{workspace.name}}</option>
+                <option
+                    ng-repeat="workspace in asana.workspaces"
+                    ng-selected="workspace.isSelected"
+                    value="{{workspace.id}}">{{workspace.name}}</option>
             </select>
         </div>
     </div>
@@ -10,8 +13,12 @@
     <div class="row">
         <div class="col-md-12">
             <label>Select Project:</label>
-            <select id="projects" class="form-control" ng-model="userPrefs.selectedProject" ng-change="changeProject(userPrefs.selectedProject)">
-                <option ng-repeat="project in asana.projects" ng-selected="project.isSelected" value="{{project.id}}">{{project | nameWithTeam}}</option>
+            <select
+                id="projects"
+                class="form-control"
+                ng-model="userPrefs.selectedProject"
+                ng-change="changeProject(userPrefs.selectedProject)"
+                ng-options="project.id as project.name group by project.team.name for project in asana.projects">
             </select>
         </div>
     </div>

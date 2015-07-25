@@ -1,6 +1,7 @@
 v22
-- Ability to add (basic)
+- Ability to add a task(basic)
 - Show tags in task details
 - Can comment by pressing enter
 - Full names for comments and stories
 - Support for due time
+- Group by teams under the project selection
