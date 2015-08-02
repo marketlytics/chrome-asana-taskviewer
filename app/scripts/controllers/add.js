@@ -9,8 +9,7 @@ controller('AddController', ['$scope', 'AsanaService', 'notify', function($scope
 		description: '',
 		dueDate: '',
 		assigned: '0',
-        dueTime: 'none',
-		isSubtask: false
+        dueTime: 'none'
     };
 
 	$scope.currentProject = null;
@@ -19,6 +18,12 @@ controller('AddController', ['$scope', 'AsanaService', 'notify', function($scope
 
 	$scope.addTask = function() {
 		var objectToAdd = angular.copy($scope.adding);
+
+		if(!objectToAdd.title || objectToAdd.title.trim().length <= 0) {
+			notify({ message:'Title cannot be empty.' , classes: 'alert-custom' } );
+			return;
+		}
+
 		if(!objectToAdd.project) {
 			objectToAdd.project = [ $scope.asana.getActiveProject().id ];
 		} else {
