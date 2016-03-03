@@ -1,261 +1,276 @@
-html,body {
-	overflow: auto;
-	-webkit-app-region: no-drag;
+html, body {
+  overflow: auto;
+  -webkit-app-region: no-drag;
 }
 
 /* Datepicker library overriding */
 ._720kb-datepicker-calendar-day._720kb-datepicker-active {
-	background-color: #64ABFF;
+  background-color: #64ABFF;
 }
 
 a {
-	outline: 0;
+  outline: 0;
 }
 
 ul {
-	margin: 0;
-	padding: 0;
-	list-style: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .text-selectable {
-	-moz-user-select: text;
-	-ms-user-select: text;
-	-webkit-user-select: text;
-	user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  -webkit-user-select: text;
+  user-select: text;
 }
 
 select.form-control {
-	cursor: pointer;
+  cursor: pointer;
 }
 
 .comment.form-control {
-	margin-top: 13px;
-	font-size: 14px;
+  margin-top: 13px;
+  font-size: 14px;
 }
 
 .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
-	opacity: 0.5;
+  opacity: 0.5;
 }
 
 .alert-custom {
-	padding: 10px 30px;
-	color: #EEE;
-	background-color: #E04836;
-	font-size: 12px;
+  padding: 10px 30px;
+  color: #EEE;
+  background-color: #E04836;
+  font-size: 12px;
 }
 
 .alert-info {
-	padding: 7px 30px;
-	color: #333;
-	background-color: #93D4D6;
-	font-size: 12px;
+  padding: 7px 30px;
+  color: #333;
+  background-color: #93D4D6;
+  font-size: 12px;
 }
 
 .alert-success {
-	color: #fff !important;
+  color: #fff !important;
+}
+
+#banner {
+  display: block;
+  background: #2196f3;
+  padding: 10px;
+  color: #FFD740;
+  font-weight: bold;
+  font-size: 110%;
+  position: fixed;
+  width: 100%;
+  z-index: 10;
+}
+
+.container {
+  margin-top: 44px;
 }
 
 .footer {
-	position: fixed;
-	bottom: 0;
-	font-size: 11px;
-	background: #fff;
-	opacity: 0.8;
-	width: 100%;
-	padding: 5px 0;
-	white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
+  position: fixed;
+  bottom: 0;
+  font-size: 11px;
+  background: #fff;
+  opacity: 0.8;
+  width: 100%;
+  padding: 5px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .nav-tabs {
-	border-bottom: 1px solid #ddd;
-	position: fixed;
-	width: 100%;
-	background-color: #fff;
-	z-index: 3;
-	padding-left: 15px;
-	margin-left: -15px;
+  border-bottom: 1px solid #ddd;
+  position: fixed;
+  width: 100%;
+  background-color: #fff;
+  z-index: 3;
+  padding-left: 15px;
+  margin-left: -15px;
 }
 
-.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus {
-	border: none;
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+  border: none;
 }
 
 .loading {
-	background: #fff url('../images/loading.gif') center center no-repeat;
-	height: 42px;
-	width: 43px;
+  background: #fff url('../images/loading.gif') center center no-repeat;
+  height: 42px;
+  width: 43px;
 }
 
 .tab-content {
-	padding-top: 50px;
+  padding-top: 50px;
 }
 
 .tab-pane {
-	padding-bottom: 40px;
+  padding-bottom: 40px;
 }
 
 #tasks > li {
-	padding: 8px 0;
-	border-bottom: 1px solid #EEE;
+  padding: 8px 0;
+  border-bottom: 1px solid #EEE;
 }
 
 #tasks > li .checkbox {
-	cursor: pointer;
+  cursor: pointer;
 }
 
 #tasks > li .details {
-	overflow: hidden;
+  overflow: hidden;
 }
 
 .detail-toolbar {
-	margin: 10px auto -8px;
+  margin: 10px auto -8px;
 }
 
 .detail-toolbar .btn {
-	background-color: #62ACDD !important;
-	background-image: none;
-	color: #fff;
+  background-color: #62ACDD !important;
+  background-image: none;
+  color: #fff;
 }
 
 .detail-toolbar .btn:hover {
-	border-color: none;
-	box-shadow: none;
+  border-color: none;
+  box-shadow: none;
 }
 
 .detail-toolbar .btn.click:hover {
-	background-color: #1f8dd6 !important;
-	border-color: #1f8dd6 !important;
+  background-color: #1f8dd6 !important;
+  border-color: #1f8dd6 !important;
 }
 
 .task-heading {
-	font-weight: bold;
-	font-size: 85%;
-	background-color: #F5F5F5;
-	padding: 8px 0;
-	margin: -9px -15px -9px -15px !important;
+  font-weight: bold;
+  font-size: 85%;
+  background-color: #F5F5F5;
+  padding: 8px 0;
+  margin: -9px -15px -9px -15px !important;
 }
 
 .task-text {
-	width: 72%;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	display: inline-block;
-	vertical-align: middle;
+  width: 72%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .assignee {
-	color: #AAA;
-	font-size: 10px;
-	display: inline-block;
-	min-width: 15px;
+  color: #AAA;
+  font-size: 10px;
+  display: inline-block;
+  min-width: 15px;
 }
 
 .deadline {
-	color: #F34A48;
+  color: #F34A48;
 }
 
 .upcoming {
-	color: #34ad00;
+  color: #34ad00;
 }
 
 .checkbox {
-	margin: 0;
+  margin: 0;
 }
 
 .item-notes {
-	font-size: 11px;
-	color: #333;
-	background: #F5F5F5;
-	padding: 5px 10px;
+  font-size: 11px;
+  color: #333;
+  background: #F5F5F5;
+  padding: 5px 10px;
 }
 
 .form-control.comments-field {
-	font-size: 13px;
-	margin-top: 15px;
-	border: 1px solid #DDD;
-	padding: 5px;
-	-webkit-border-radius: 3px;
+  font-size: 13px;
+  margin-top: 15px;
+  border: 1px solid #DDD;
+  padding: 5px;
+  -webkit-border-radius: 3px;
 }
 
 .jump-to-asana {
-	margin-right: -5px;
-	margin-top: -10px;
+  margin-right: -5px;
+  margin-top: -10px;
 }
 
 .subtask a {
-	color: #325773;
-	font-weight: bold;
-	text-decoration: none;
+  color: #325773;
+  font-weight: bold;
+  text-decoration: none;
 }
 
 .input-group-btn {
-	padding-top: 13px;
+  padding-top: 13px;
 }
 
 button.btn {
-	padding: 9px 11px;
-	text-transform: none;
-	background: #1f8dd6;
+  padding: 9px 11px;
+  text-transform: none;
+  background: #1f8dd6;
 }
 
-
 .checkbox input[type="checkbox"] {
-	position: relative;
-	margin: 0;
+  position: relative;
+  margin: 0;
 }
 
 small {
-	color: #AAA;
-	font-size: 70%;
+  color: #AAA;
+  font-size: 70%;
 }
 
 label {
-	font-weight: normal;
-	margin-bottom: -10px;
-	margin-top: 10px;
-	display: block;
+  font-weight: normal;
+  margin-bottom: -10px;
+  margin-top: 10px;
+  display: block;
 }
 
 .details {
-	padding: 10px 5px;
+  padding: 10px 5px;
 }
 
 .stories {
-	color: rgb(10,110,189);
-	font-size: 11px;
+  color: rgb(10, 110, 189);
+  font-size: 11px;
 }
 
 .story-author {
-	color: #333;
+  color: #333;
 }
 
 .story-text {
-	color: #999;
+  color: #999;
 }
 
 .story.comment {
-	background: aliceblue;
-	margin: 7px 0;
-	padding: 0 5px;
+  background: aliceblue;
+  margin: 7px 0;
+  padding: 0 5px;
 }
 
 .comment > .story-text {
-	color: #333;
+  color: #333;
 }
 
 .story-text a {
-	color: rgb(10,110,189);
+  color: rgb(10, 110, 189);
 }
 
 .stories small {
-	color: #AAA;
+  color: #AAA;
 }
 
 .row .checkbox label {
-	margin-top: 15px !important;
-	padding: 0;
+  margin-top: 15px !important;
+  padding: 0;
 }
