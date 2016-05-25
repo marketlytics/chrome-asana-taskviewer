@@ -1,8 +1,22 @@
 // var fs = null;
 // var FOLDERNAME = 'testchromeapp';
 // &uid ==> user id
+// Set Banner image according to the weekday
+var header = document.getElementById('banner');
+var day = (new Date()).getDay();
+var baseUrl = 'http://recurship.com/build-a-mvp?utm_source=asanaviewer&utm_medium=app&utm_content=topbanner&utm_campaign=asana&utm_content=';
+if(day >= 1 && day < 4) { // Monday, Tuesday, Wednesday
+  header.setAttribute('href', baseUrl + 'looking_to_build_an_mvp');
+  header.innerHTML = "Looking to build a MVP? We are available.";
+} else if (day >= 4 && day < 6) { // Thursday, Fri
+  header.setAttribute('href', baseUrl + 'have_an_idea');
+  header.innerHTML = "Have an idea? I can help you build a MVP.";
+} else { // Sat, Sun
+  header.setAttribute('href', baseUrl + 'support_for_side_project');
+  header.innerHTML = "Need support for your side project? We can help.";
+}
 
-/* Analytics library in bower was manually updated to 1.5.2 since bower couldnt find it */
+/* Analytics library in bower was manually updated to 1.6.0 since bower couldnt find it */
 var service = analytics.getService('asana-chrome-app');
 window.tracker = service.getTracker('UA-18735851-11');
 var resolutionLabel = window.innerWidth + ' x ' + window.innerHeight;
